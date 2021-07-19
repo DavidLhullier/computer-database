@@ -14,10 +14,8 @@ public class CompanyMapper {
 			company.setId(Integer.parseInt(rs.getString("id")));
 			company.setName(rs.getString("name"));
 		} catch (NumberFormatException e) {
-			// id dans base de donnée n'est pas un id 
 			e.printStackTrace();
 		} catch (SQLException e) {
-			// rs vide
 			e.printStackTrace();
 		}
 		
