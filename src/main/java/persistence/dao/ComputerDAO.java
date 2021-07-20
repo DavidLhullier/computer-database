@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Computer;
-import model.ComputerBuilder;
+import model.Computer.ComputerBuilder;
 import persistence.JDBC;
 import persistence.binding.mapper.ComputerMapper;
 
@@ -54,7 +54,7 @@ public class ComputerDAO {
 		return listComputer;
 	}
 
-	public void addComputerById(Computer computer) {
+	public void addComputer(Computer computer) {
 		try( Connection cn = JDBC.getInstance().getConnection(); ){
 			PreparedStatement request = cn.prepareStatement(REQUEST_ADD_COMPUTER);
 
@@ -79,21 +79,19 @@ public class ComputerDAO {
 	}
 
 	public Computer getComputerById(int id) {
-		ComputerBuilder computer = new ComputerBuilder();
-
+		Computer computer = new Computer();
 		try( Connection cn = JDBC.getInstance().getConnection(); ){
 			PreparedStatement request = cn.prepareStatement(REQUEST_GET_ONE_COMPUTER_BY_ID);
 			request.setInt(1, id);
 			ResultSet rs = request.executeQuery();
 
 			rs.next();
-			computer = this.computerMapper.mapToComputer(rs);
+			 computer = this.computerMapper.mapToComputer(rs);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
-		Computer computerTmp = computer.build();
-		return computerTmp;
+		
+		return computer;
 	}
 
 	public void deleteComputerById(int id) {

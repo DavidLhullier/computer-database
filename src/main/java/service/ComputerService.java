@@ -20,15 +20,15 @@ public class ComputerService {
 	}
 
 	public ComputerService() {
-		this.computerDAO = new ComputerDAO();
+		this.computerDAO = new ComputerDAO().getInstance();
 	}
 
 	public List<Computer> getAllComputer() {
 		return computerDAO.getAllComputer();
 	}
 
-	public void addComputerById(Computer computer) {
-		computerDAO.addComputerById(computer);
+	public void addComputer(Computer computer) {
+		computerDAO.addComputer(computer);
 	}
 
 	public Computer getComputer(int id) {
