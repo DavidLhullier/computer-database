@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 import model.Company;
 import model.Computer;
-import model.ComputerBuilder;
+import model.Computer.ComputerBuilder;
 
 public class ComputerMapper {
 
@@ -35,6 +35,7 @@ public class ComputerMapper {
 				Company company = new Company(Integer.valueOf(tmpString),rs.getString("company_name"));
 				computer.setCompany(company);
 			}
+
 		} catch (NumberFormatException e) {
 			// id dans base de donnée n'est pas un id 
 			e.printStackTrace();
@@ -43,7 +44,6 @@ public class ComputerMapper {
 			System.out.println("SQLState: " + ex.getSQLState());
 			System.out.println("VendorError: " + ex.getErrorCode());
 		}
-		
 		Computer computerTmp = computer.build();
 		
 		return computerTmp;

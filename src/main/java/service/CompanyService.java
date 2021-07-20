@@ -11,12 +11,12 @@ public class CompanyService {
 	private CompanyDAO companyDAO;
 
 	//Singleton
-	/*public static  CompanyService getInstance() {
+	public static  CompanyService getInstance() {
 		if(instance == null) {
 			instance = new CompanyService();
 		}
 		return instance;
-	}*/
+	}
 
 	public CompanyService() {
 		this.companyDAO = new CompanyDAO();

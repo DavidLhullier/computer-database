@@ -11,12 +11,12 @@ public class CompanyController {
 	private CompanyService companyService;
 	
 	//Singleton
-	/*public static  CompanyController getInstance() {
+	public static  CompanyController getInstance() {
 		if(instance == null) {
 			instance = new CompanyController();
 		}
 		return instance;
-	}*/
+	}
 
 	public CompanyController() {
 		this.companyService = new CompanyService();

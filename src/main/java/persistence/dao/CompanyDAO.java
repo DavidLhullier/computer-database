@@ -26,12 +26,12 @@ public class CompanyDAO {
 
 
 	//Singleton
-	/*public static  CompanyDAO getInstance() {
+	public static  CompanyDAO getInstance() {
 		if(instance == null) {
 			instance = new CompanyDAO();
 		}
 		return instance;
-	}*/
+	}
 
 
 	public List<Company> getAllCompany() {

@@ -9,25 +9,25 @@ public class ComputerController {
 
 	private static ComputerController instance;
 	private ComputerService computerService;
-	
-	
+
+
 	//Singleton
-		public static  ComputerController getInstance() {
-			if(instance == null) {
-				instance = new ComputerController();
-			}
-			return instance;
+	public static  ComputerController getInstance() {
+		if(instance == null) {
+			instance = new ComputerController();
 		}
-	public ComputerController() {
-		this.computerService = new ComputerService();
+		return instance;
 	}
-	
+	public ComputerController() {
+		this.computerService = new ComputerService().getInstance();
+	}
+
 	public List<Computer> getAllComputer(){
 		return computerService.getAllComputer();
 	}
 
-	public void addComputerById(Computer computer) {
-		computerService.addComputerById(computer);
+	public void addComputer(Computer computer) {
+		computerService.addComputer(computer);
 	}
 
 	public Computer getComputerById(int id) {
@@ -36,13 +36,13 @@ public class ComputerController {
 
 	public void deleteComputerById(int id) {
 		computerService.deleteComputerById(id);
-		
+
 	}
 
 	public void editComputerById(int id, Computer computer) {
 		computerService.editComputerById(id, computer);
-		
+
 	}
 
-	
+
 }
