@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" version="4.0">
-  
+
   <servlet>
-    <servlet-name>Test</servlet-name>
-    <servlet-class>com.octest.servlets.Test</servlet-class>
+    <servlet-name>CompanyServlet</servlet-name>
+    <servlet-class>servlet.CompanyServlet</servlet-class>
   </servlet>
-  
   <servlet-mapping>
-    <servlet-name>Test</servlet-name>
-    <url-pattern></url-pattern>
+    <servlet-name>CompanyServlet</servlet-name>
+    <url-pattern>/bonjourCompany</url-pattern>
   </servlet-mapping>
-  
+  <servlet>
+    <description></description>
+    <display-name>MenuServlet</display-name>
+    <servlet-name>MenuServlet</servlet-name>
+    <servlet-class>servlet.MenuServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>MenuServlet</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
 </web-app>

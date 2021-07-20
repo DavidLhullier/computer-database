@@ -6,12 +6,20 @@
 	</projects>
 	<buildSpec>
 		<buildCommand>
+<<<<<<< HEAD
 			<name>org.eclipse.wst.common.project.facet.core.builder</name>
+=======
+			<name>org.eclipse.jdt.core.javabuilder</name>
+>>>>>>> On est là frero
 			<arguments>
 			</arguments>
 		</buildCommand>
 		<buildCommand>
+<<<<<<< HEAD
 			<name>org.eclipse.jdt.core.javabuilder</name>
+=======
+			<name>org.eclipse.wst.common.project.facet.core.builder</name>
+>>>>>>> On est là frero
 			<arguments>
 			</arguments>
 		</buildCommand>

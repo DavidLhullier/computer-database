@@ -12,6 +12,8 @@ import model.Computer.ComputerBuilder;
 public class CLImain {
 
 	public static void main(String[] args) {
+	
+		/*
 		CompanyController companyController = new CompanyController().getInstance();
 		//List<Company> listCompany =  companyController.getAllCompany();
 		//listCompany.stream().forEach(c -> System.out.println(c)); 
@@ -62,8 +64,8 @@ public class CLImain {
 		//computerController.deleteComputerById(id);
 		//List<Computer> listComputer = computerController.getAllComputer();
 		//listComputer.stream().forEach(c -> System.out.println(c));
-		
-		
+
+		*/
 		
 		
 	}
