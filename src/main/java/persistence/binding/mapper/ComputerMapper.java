@@ -6,11 +6,12 @@ import java.time.LocalDate;
 
 import model.Company;
 import model.Computer;
+import model.ComputerBuilder;
 
 public class ComputerMapper {
 
 	public Computer mapToComputer(ResultSet rs) {
-		Computer computer = new Computer();
+		ComputerBuilder computer = new ComputerBuilder();
 
 		try {
 			computer.setId(Integer.parseInt(rs.getString("id")));
@@ -42,7 +43,10 @@ public class ComputerMapper {
 			System.out.println("SQLState: " + ex.getSQLState());
 			System.out.println("VendorError: " + ex.getErrorCode());
 		}
-		return computer;
+		
+		Computer computerTmp = computer.build();
+		
+		return computerTmp;
 	}
 
 }

@@ -3,13 +3,21 @@ package service;
 import java.util.List;
 
 import model.Company;
-import model.Computer;
 import persistence.dao.CompanyDAO;
 
 public class CompanyService {
-	
+
+	private static CompanyService instance;
 	private CompanyDAO companyDAO;
-	
+
+	//Singleton
+	/*public static  CompanyService getInstance() {
+		if(instance == null) {
+			instance = new CompanyService();
+		}
+		return instance;
+	}*/
+
 	public CompanyService() {
 		this.companyDAO = new CompanyDAO();
 	}

@@ -12,8 +12,8 @@ public class CLImain {
 
 	public static void main(String[] args) {
 		CompanyController companyController = new CompanyController();
-		//List<Company> listCompany =  companyController.getAllCompany();
-		//listCompany.stream().forEach(c -> System.out.println(c)); 
+		List<Company> listCompany =  companyController.getAllCompany();
+		listCompany.stream().forEach(c -> System.out.println(c)); 
 		
 		
 		ComputerController computerController = new ComputerController();
@@ -21,7 +21,7 @@ public class CLImain {
 		//listComputer.stream().forEach(c -> System.out.println(c));
 		
 		int id = 1;
-		Company company = companyController.getCompanyById(id);
+		//Company company = companyController.getCompanyById(id);
 		//System.out.println(company);
 		
 		
@@ -53,6 +53,10 @@ public class CLImain {
 		computerController.deleteComputerById(id);
 		List<Computer> listComputer = computerController.getAllComputer();
 		listComputer.stream().forEach(c -> System.out.println(c));*/
+		
+		
+		
+		
 	}
 
 }

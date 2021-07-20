@@ -1,6 +1,5 @@
 package controller;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import model.Computer;
@@ -8,8 +7,17 @@ import service.ComputerService;
 
 public class ComputerController {
 
+	private static ComputerController instance;
 	private ComputerService computerService;
 	
+	
+	//Singleton
+		public static  ComputerController getInstance() {
+			if(instance == null) {
+				instance = new ComputerController();
+			}
+			return instance;
+		}
 	public ComputerController() {
 		this.computerService = new ComputerService();
 	}

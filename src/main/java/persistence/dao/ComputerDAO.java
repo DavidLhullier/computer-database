@@ -6,20 +6,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import model.Computer;
+import model.ComputerBuilder;
 import persistence.JDBC;
 import persistence.binding.mapper.ComputerMapper;
 
 public class ComputerDAO {
 
+	private static ComputerDAO instance;
 	private ComputerMapper computerMapper;
 	private final String REQUEST_GET_ALL_COMPUTER = "SELECT cp.id, cp.name, cp.introduced, cp.discontinued, cp.company_id, cny.name as company_name FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id ;";
 	private final String REQUEST_GET_ONE_COMPUTER_BY_ID = "SELECT cp.id, cp.name, cp.introduced, cp.discontinued, cp.company_id, cny.name as company_name FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id WHERE cp.id = ? ;";
@@ -32,6 +29,15 @@ public class ComputerDAO {
 		this.computerMapper = new ComputerMapper();
 	}
 
+	//Singleton
+	public static  ComputerDAO getInstance() {
+		if(instance == null) {
+			instance = new ComputerDAO();
+		}
+		return instance;
+	}
+
+
 	public List<Computer> getAllComputer() {
 		List<Computer> listComputer = new ArrayList<>();
 
@@ -43,7 +49,6 @@ public class ComputerDAO {
 			}
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return listComputer;
@@ -52,20 +57,29 @@ public class ComputerDAO {
 	public void addComputerById(Computer computer) {
 		try( Connection cn = JDBC.getInstance().getConnection(); ){
 			PreparedStatement request = cn.prepareStatement(REQUEST_ADD_COMPUTER);
-			request.setString(1, computer.getName());
-			request.setDate(2, Date.valueOf(computer.getIntroduced()) );
-			request.setDate(3, Date.valueOf(computer.getDiscontinued()) );
-			request.setInt(4, computer.getCompany().getId());
+
+			if(computer.getName() != null) {
+				request.setString(1, computer.getName());
+			}
+			if(computer.getIntroduced() != null) {
+				request.setDate(2, Date.valueOf(computer.getIntroduced()) );
+			}
+			if(computer.getDiscontinued() != null) {
+				request.setDate(3, Date.valueOf(computer.getDiscontinued()) );
+			}
+			if(computer.getCompany() != null) {
+				request.setInt(4, computer.getCompany().getId());
+			}		
 			request.executeUpdate();
+			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 	}
 
 	public Computer getComputerById(int id) {
-		Computer computer = new Computer();
+		ComputerBuilder computer = new ComputerBuilder();
 
 		try( Connection cn = JDBC.getInstance().getConnection(); ){
 			PreparedStatement request = cn.prepareStatement(REQUEST_GET_ONE_COMPUTER_BY_ID);
@@ -75,11 +89,11 @@ public class ComputerDAO {
 			rs.next();
 			computer = this.computerMapper.mapToComputer(rs);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		return computer;
+		Computer computerTmp = computer.build();
+		return computerTmp;
 	}
 
 	public void deleteComputerById(int id) {
@@ -91,7 +105,6 @@ public class ComputerDAO {
 			request.executeUpdate();
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -137,7 +150,6 @@ public class ComputerDAO {
 			request.executeUpdate();
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

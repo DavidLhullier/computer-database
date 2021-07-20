@@ -3,12 +3,20 @@ package controller;
 import java.util.List;
 
 import model.Company;
-import model.Computer;
 import service.CompanyService;
 
 public class CompanyController {
 
+	private static CompanyController instance;
 	private CompanyService companyService;
+	
+	//Singleton
+	/*public static  CompanyController getInstance() {
+		if(instance == null) {
+			instance = new CompanyController();
+		}
+		return instance;
+	}*/
 
 	public CompanyController() {
 		this.companyService = new CompanyService();
