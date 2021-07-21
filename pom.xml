@@ -28,7 +28,7 @@
 		<mockito-all.version>1.10.19</mockito-all.version>
 		<h2database.version>1.4.198</h2database.version>
 		<mybatis.version>3.4.5</mybatis.version>	
-		<tomcat.version>8.5.69</tomcat.version>
+		<tomcat.version>9.0.46</tomcat.version>
 
 		
 
