@@ -47,7 +47,7 @@ public class Computer {
 	@Override
 	public String toString() {
 		return ", id=" + id + ", name=" + name + ", introduced=" + introduced
-				+ ", discontinued=" + discontinued + ", company_id=" + this.company + "]";
+				+ ", discontinued=" + discontinued + ", company=" + this.company + "]";
 	}
 	
 	public static class ComputerBuilder {

@@ -4,6 +4,7 @@ import java.util.List;
 
 import controller.CompanyController;
 import model.Computer;
+import model.Page;
 import persistence.dao.ComputerDAO;
 
 public class ComputerService {
@@ -20,7 +21,7 @@ public class ComputerService {
 	}
 
 	public ComputerService() {
-		this.computerDAO = new ComputerDAO().getInstance();
+		this.computerDAO = ComputerDAO.getInstance();
 	}
 
 	public List<Computer> getAllComputer() {
@@ -43,6 +44,14 @@ public class ComputerService {
 	public void editComputerById(int id, Computer computer) {
 		computerDAO.editComputerById(id, computer);
 
+	}
+
+	public int countAllComputer() {
+		return computerDAO.countAllComputer();
+	}
+
+	public List<Computer> getComputerPage(Page page) {
+		return computerDAO.getComputerPage(page);
 	}
 
 }
