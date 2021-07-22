@@ -58,7 +58,8 @@ public class AddComputerServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		
+		
 		ComputerBuilder computerAdd = new ComputerBuilder();
 		if(!request.getParameter("name").isEmpty()) {
 			String computerName = request.getParameter("name");
@@ -84,6 +85,14 @@ public class AddComputerServlet extends HttpServlet {
 
 
 		Computer computer = computerAdd.build();
+		
+		//DTO 
+		//appel de DTO to COmputer avec un mapper (String)
+		//avec 1ere ligne mapper Classe ValidationDTO en pattern singleton pour apell validateDTO(DTO)
+		
+		// dans validationDTO AVEC PLEIN DE VALIDATION ATTRIBUTS ssinon throw excpetions
+		//logger throws ces excpetions mais sortent dans le servlet
+		// mapper rend un model computer que je TRANSMET !!
 		
 		this.computerService.addComputer(computer);
 		
