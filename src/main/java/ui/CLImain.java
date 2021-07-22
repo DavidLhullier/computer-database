@@ -1,18 +1,12 @@
 package ui;
 
-import java.time.LocalDate;
-import java.util.List;
-
-import controller.CompanyController;
-import controller.ComputerController;
-import model.Company;
-import model.Computer;
-import model.Computer.ComputerBuilder;
+import logger.CDBLogger;
 
 public class CLImain {
 
 	public static void main(String[] args) {
-	
+		CDBLogger.logInfo(CLImain.class.toString(), new Exception()) ;
+		
 		/*
 		CompanyController companyController = new CompanyController().getInstance();
 		//List<Company> listCompany =  companyController.getAllCompany();

@@ -16,6 +16,7 @@ import model.Computer;
 import model.Computer.ComputerBuilder;
 import service.CompanyService;
 import service.ComputerService;
+import logger.CDBLogger;
 
 /**
  * Servlet implementation class AddComputerServlet
@@ -42,7 +43,8 @@ public class AddComputerServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		
+		
 		List<Company> listCompany = companyService.getAllCompany();
 		
 		request.setAttribute("listCompany", listCompany);
