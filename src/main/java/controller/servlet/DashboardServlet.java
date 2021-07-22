@@ -35,6 +35,10 @@ public class DashboardServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		setNumeroPage(request.getParameter("page"));
+		String nbElement = request.getParameter("nbElementByPage");
+		if(nbElement != null) {
+			page.setNbElementByPage(Integer.valueOf(nbElement));
+		}
 		
 		
 		int nbComputer = computerService.countAllComputer();
@@ -48,6 +52,8 @@ public class DashboardServlet extends HttpServlet {
 		request.setAttribute("nbComputer", nbComputer);
 		request.setAttribute("page", page);
 		
+		
+
 		this.getServletContext().getRequestDispatcher("/WEB-INF/view/dashboard.jsp").forward(request, response);
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
@@ -56,7 +62,7 @@ public class DashboardServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		System.out.println(request.getParameter("button50"));
 	}
 
 	private void setNumeroPage(String request) {

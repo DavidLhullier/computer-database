@@ -89,29 +89,60 @@
 
 	<footer class="navbar-fixed-bottom">
 		<div class="container text-center">
-			<ul class="pagination">
-				<li><a href="?page=1" aria-label="Previous"> <span
-						aria-hidden="true">&laquo;</span>
-				</a></li>
-				<li><a href="?page=${page.numeroPage - 2}">${page.numeroPage - 2}</a></li>
-				<li><a href="?page=${page.numeroPage - 1}">${page.numeroPage - 1}</a></li>
+		 <ul class="pagination">
+				<li>
+					<a href="?page=1" aria-label="Previous"> 
+						<span aria-hidden="true">&laquo;</span>
+					</a>
+				</li>
+				<c:if test="${page.numeroPage > 2}">
+					<li><a href="
+                      		<c:url value="/DashboardServlet"><c:param name="page" value="${page.numeroPage - 2}"/></c:url>
+                      	"> ${page.numeroPage - 2}
+                 	</a>
+                 </li>
+                 </c:if>
+                 <c:if test="${page.numeroPage > 1}">
+					<li><a href="
+                      		<c:url value="/DashboardServlet"><c:param name="page" value="${page.numeroPage - 1}"/></c:url>
+                      	"> ${page.numeroPage - 1}
+                 	</a>
+                 </li>
+                 </c:if>
 				<li><a href="?page=${page.numeroPage }"   >${page.numeroPage}</a></li>
-				<li><a href="?page=${page.numeroPage + 1}">${page.numeroPage + 1}</a></li>
-				<li><a href="?page=${page.numeroPage + 2}">${page.numeroPage + 2}</a></li>
-				<li><a href="?page=${page.totalPage}" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+				<c:if test="${page.numeroPage < page.totalPage}">
+					<li><a href="
+                   		<c:url value="/DashboardServlet"><c:param name="page" value="${page.numeroPage + 1}"/></c:url>
+                      	">${page.numeroPage + 1}
+                 	</a>
+                 	</li>
+                 </c:if>
+                 <c:if test="${page.numeroPage < page.totalPage - 1}">
+					<li><a href="
+                   		<c:url value="/DashboardServlet"><c:param name="page" value="${page.numeroPage + 2}"/></c:url>
+                      	">${page.numeroPage + 2}
+                 	</a>
+                 	</li>
+                 </c:if>
+                 <li><a href="?page=${page.totalPage}" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 				</a></li>
 			</ul>
-
-		<div class="btn-group btn-group-sm pull-right" role="group">
-			<button type="button" class="btn btn-default">10</button>
-			<button type="button" class="btn btn-default">50</button>
-			<button type="button" class="btn btn-default">100</button>
-		</div>
+		<div class="btn-group btn-group-sm pull-right" role="group" >
+	         	<form method="GET">
+		        	<button type="submit" class="btn btn-default" name="nbElementByPage" value="10">10</button>
+		            <button type="submit" class="btn btn-default" name="nbElementByPage" value="50">50</button>
+		            <button type="submit" class="btn btn-default" name="nbElementByPage" value="100">100</button>
+	            </form>
+	        </div>
 	</div>
 	</footer>
+	
+	
 	<script src="../js/jquery.min.js"></script>
 	<script src="../js/bootstrap.min.js"></script>
 	<script src="../js/dashboard.js"></script>
+	
+	
 
 </body>
 </html>
