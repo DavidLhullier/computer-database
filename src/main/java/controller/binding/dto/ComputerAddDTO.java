@@ -1,6 +1,5 @@
 package controller.binding.dto;
 
-
 public class ComputerAddDTO {
 	
 	private String name;
@@ -15,6 +14,9 @@ public class ComputerAddDTO {
 		this.companyId = computerDTOBuilder.companyId;
 	}
 	
+	public ComputerAddDTO() {
+		
+	}
 	
 	public String getName() {
 		return name;
@@ -29,8 +31,13 @@ public class ComputerAddDTO {
 		return companyId;
 	}
 	
+	@Override
+	public String toString() {
+		return ", name=" + name + ", introduced=" + introduced
+				+ ", discontinued=" + discontinued + ", companyId=" + this.companyId + "]";
+	}
 	
-	public class ComputerDTOBuilder {
+	public static class ComputerDTOBuilder {
 
 		private String name;
 		private String introduced;
@@ -42,7 +49,6 @@ public class ComputerAddDTO {
 			return this;
 		}
 
-		
 		public ComputerDTOBuilder setName(String name) {
 			this.name = name;
 			return this;
@@ -64,5 +70,6 @@ public class ComputerAddDTO {
 		
 		
 	}
+
 	
 }

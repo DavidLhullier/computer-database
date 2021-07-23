@@ -10,6 +10,10 @@ public class Company {
 		this.name = name;
 	}
 	
+	public Company(int id) {
+		this.id = id;
+	}
+	
 	public Company() {
 	}
 

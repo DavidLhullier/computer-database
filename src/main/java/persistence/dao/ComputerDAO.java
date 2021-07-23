@@ -78,7 +78,7 @@ public class ComputerDAO {
 
 				request.setNull(3, Types.TIMESTAMP);
 			}
-			if(computer.getCompany() != null) {
+			if(computer.getCompany() != null && computer.getCompany().getId() != 0) {
 				request.setInt(4, computer.getCompany().getId());
 			}else {
 
