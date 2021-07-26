@@ -25,7 +25,7 @@ public class ComputerDTOMapper {
 		ComputerBuilder computerBuilder = new ComputerBuilder();
 		
 		computerBuilder.setName(computerDTO.getName()).
-				setCompany(new Company(Integer.valueOf(computerDTO.getCompanyId())));
+				setCompany(new Company(Integer.valueOf(computerDTO.getCompanyId()), "tygui"));
 		 
 
 		

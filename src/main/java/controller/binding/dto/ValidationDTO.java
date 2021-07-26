@@ -28,7 +28,7 @@ public class ValidationDTO {
 		String computerCompanyId = computerDTO.getCompanyId();
 		if(computerCompanyId == null |  computerCompanyId.isEmpty()) {
 			// remonter une erreur
-			throw new Exception("companyid == null or empty");
+			throw new Exception("companyId == null or empty");
 		} else {
 			Integer.parseInt(computerCompanyId);
 		}

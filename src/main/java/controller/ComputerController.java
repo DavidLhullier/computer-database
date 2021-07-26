@@ -39,10 +39,9 @@ public class ComputerController {
 
 	}
 
-	public void editComputerById(int id, Computer computer) {
+/*	public void editComputerById(int id, Computer computer) {
 		computerService.editComputerById(id, computer);
-
-	}
+	}*/
 
 
 }

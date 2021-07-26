@@ -1,6 +1,13 @@
 package ui;
 
+import java.time.LocalDate;
+
+import controller.CompanyController;
+import controller.ComputerController;
 import logger.CDBLogger;
+import model.Company;
+import model.Computer;
+import model.Computer.ComputerBuilder;
 
 public class CLImain {
 
@@ -59,8 +66,8 @@ public class CLImain {
 		//List<Computer> listComputer = computerController.getAllComputer();
 		//listComputer.stream().forEach(c -> System.out.println(c));
 
-		*/
 		
+		*/
 		
 	}
 

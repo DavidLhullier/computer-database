@@ -11,6 +11,12 @@
 <style><%@include file="../../static/css/bootstrap.min.css"%></style>
 <style><%@include file="../../static/css/font-awesome.css"%></style>
 <style><%@include file="../../static/css/main.css"%></style>
+
+<style><%@include file="../../static/js/jquery.min.js"%></style>
+<style><%@include file="../../static/js/bootstrap.min.js"%></style>
+<style><%@include file="../../static/js/dashboard.js"%></style>
+	
+	
 </head>
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
@@ -35,7 +41,10 @@
 				</div>
 				<div class="pull-right">
 					<a class="btn btn-success" id="addComputer" href="/computer-database/AddComputerServlet">Add Computer</a> 
-						<a class="btn btn-default" id="editComputer" href="#"
+						<a class="btn btn-default" id="editComputer" 
+						href="
+						<c:url value="/EditComputerServlet"><c:param name="id" value="#"/></c:url>
+						"
 						onclick="$.fn.toggleEditMode();">Edit</a>
 				</div>
 			</div>
@@ -75,7 +84,11 @@
 						<tr>
 							<td class="editMode"><input type="checkbox" name="cb"
 								class="cb" value="0"></td>
-							<td><a href="editComputer.html" onclick=""> ${ computer.name }</a>
+							<td><a
+							href="
+							<c:url value="/EditComputerServlet"><c:param name="id" value="${ computer.id }"/></c:url>
+							"
+							onclick=""> ${ computer.name }</a>
 							</td>
 							<td>${ computer.introduced }</td>
 							<td>${ computer.discontinued }</td>
@@ -137,12 +150,7 @@
 	</div>
 	</footer>
 	
-	
-	<script src="../js/jquery.min.js"></script>
-	<script src="../js/bootstrap.min.js"></script>
-	<script src="../js/dashboard.js"></script>
-	
-	
+
 
 </body>
 </html>

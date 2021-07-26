@@ -123,7 +123,7 @@ public class ComputerDAO {
 
 	}
 
-	public void editComputerById(int id, Computer computer) {
+	public void editComputerById(int id, Optional<Computer> computer) {
 
 		Computer computerDB = new Computer();
 		try( Connection cn = JDBC.getInstance().getConnection(); ){
@@ -135,31 +135,47 @@ public class ComputerDAO {
 			computerDB = this.computerMapper.mapToComputer(rs);
 
 			PreparedStatement request = cn.prepareStatement(REQUEST_EDIT_ONE_COMPUTER_BY_ID);
-			if(computer.getName() == null) {
-				request.setString(1, computerDB.getName());
+			if(computer.get().getName() == null) {
+				if(computerDB.getName() != null) {
+					request.setString(1, computerDB.getName());
+				}
 			}
 			else {
-				request.setString(1, computer.getName());
+				request.setString(1, computer.get().getName());
 			}
-			if(computer.getIntroduced() == null) {
-				request.setDate(2, Date.valueOf(computerDB.getIntroduced()) );	
-			}
-			else {
-				request.setDate(2, Date.valueOf(computer.getIntroduced()) );
-			}
-			if(computer.getDiscontinued() == null) {
-				request.setDate(3, Date.valueOf(computerDB.getDiscontinued()) );	
+			if(computer.get().getIntroduced() == null) {
+				if(computerDB.getIntroduced() != null) {
+					request.setDate(2, Date.valueOf(computerDB.getIntroduced()) );	
+				} else {
+					request.setNull(2, java.sql.Types.NULL);
+				}
 			}
 			else {
-				request.setDate(3, Date.valueOf(computer.getDiscontinued()) );
+				request.setDate(2, Date.valueOf(computer.get().getIntroduced()) );
 			}
-			if(computer.getCompany().getId() == 0) {
-				request.setInt(4, computerDB.getCompany().getId());
+
+			if(computer.get().getDiscontinued() == null) {
+				if(computerDB.getDiscontinued() != null) {
+					request.setDate(3, Date.valueOf(computerDB.getDiscontinued()) );	
+				} else {
+					request.setNull(3, java.sql.Types.NULL);
+				}
 			}
 			else {
-				request.setInt(4, computer.getCompany().getId());		
+				request.setDate(3, Date.valueOf(computer.get().getDiscontinued()) );
+			}
+			if(computer.get().getCompany().getId() == 0) {
+				if(computerDB.getCompany() != null) {
+					request.setInt(4, computerDB.getCompany().getId());
+				} else {
+					request.setNull(4, java.sql.Types.NULL);
+				}
+			}
+			else {
+				request.setInt(4, computer.get().getCompany().getId());		
 			}
 			request.setInt(5, id);
+			
 			request.executeUpdate();
 
 		} catch (SQLException e) {

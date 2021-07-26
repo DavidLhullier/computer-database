@@ -42,7 +42,7 @@ public class ComputerService {
 
 	}
 
-	public void editComputerById(int id, Computer computer) {
+	public void editComputerById(int id, Optional<Computer> computer) {
 		computerDAO.editComputerById(id, computer);
 
 	}
