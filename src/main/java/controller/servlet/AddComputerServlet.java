@@ -3,6 +3,7 @@ package controller.servlet;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,13 +13,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import controller.binding.dto.ComputerAddDTO;
 import controller.binding.dto.ComputerAddDTO.ComputerDTOBuilder;
-import controller.binding.mapper.ComputerBindingMapper;
+import controller.binding.mapper.ComputerDTOMapper;
 import logger.CDBLogger;
 import model.Company;
 import model.Computer;
 import service.CompanyService;
 import service.ComputerService;
-import ui.CLImain;
+
 /**
  * Servlet implementation class AddComputerServlet
  */
@@ -27,7 +28,7 @@ public class AddComputerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private CompanyService companyService;
 	private ComputerService computerService;
-	private ComputerBindingMapper computerBindingMapper;
+	private ComputerDTOMapper computerBindingMapper;
 
 	private static final String VUE_DASHBOARD = "/computer-database/DashboardServlet";
 
@@ -37,7 +38,7 @@ public class AddComputerServlet extends HttpServlet {
 	public AddComputerServlet() {
 		this.companyService = CompanyService.getInstance();
 		this.computerService = ComputerService.getInstance();
-		this.computerBindingMapper = new ComputerBindingMapper();
+		this.computerBindingMapper = new ComputerDTOMapper();
 	}
 
 	
@@ -78,25 +79,18 @@ public class AddComputerServlet extends HttpServlet {
 		computerDTO = computerAdd.build();
 		
 		try {
-			
-			Computer computer = this.computerBindingMapper.mapToComputer(computerDTO);
-			System.out.println(computer);
+			Optional<Computer> computer = this.computerBindingMapper.mapToComputer(computerDTO);
+			CDBLogger.logInfo(AddComputerServlet.class.toString(), computer.toString());
 			this.computerService.addComputer(computer);
 			
 		} catch(Exception e) {
-			CDBLogger.logInfo(AddComputerServlet.class.toString(), new Exception("computer not add")) ;
+			
 		}
 	
 
 		response.sendRedirect(VUE_DASHBOARD); //ESSENTIEL
 	}
 
-	public boolean compareTo(LocalDate date, LocalDate otherDate) {
-		if(date.isBefore(otherDate)) {
-			return true;
-		}
-		else {return false;}
-	}
 
 
 }

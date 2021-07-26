@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import model.Computer;
 import model.Computer.ComputerBuilder;
@@ -59,27 +60,27 @@ public class ComputerDAO {
 		return listComputer;
 	}
 
-	public void addComputer(Computer computer) {
+	public void addComputer(Optional<Computer> computer) {
 		try( Connection cn = JDBC.getInstance().getConnection(); ){
 			PreparedStatement request = cn.prepareStatement(REQUEST_ADD_COMPUTER);
 
-			if(computer.getName() != null) {
-				request.setString(1, computer.getName());
+			if(computer.get().getName() != null) {
+				request.setString(1, computer.get().getName());
 			}
 
-			if(computer.getIntroduced() != null) {
-				request.setDate(2, Date.valueOf(computer.getIntroduced()) );
+			if(computer.get().getIntroduced() != null) {
+				request.setDate(2, Date.valueOf(computer.get().getIntroduced()) );
 			}else {
 			request.setNull(2, Types.TIMESTAMP);
 			}
-			if(computer.getDiscontinued() != null) {
-				request.setDate(3, Date.valueOf(computer.getDiscontinued()) );
+			if(computer.get().getDiscontinued() != null) {
+				request.setDate(3, Date.valueOf(computer.get().getDiscontinued()) );
 			}else {
 
 				request.setNull(3, Types.TIMESTAMP);
 			}
-			if(computer.getCompany() != null && computer.getCompany().getId() != 0) {
-				request.setInt(4, computer.getCompany().getId());
+			if(computer.get().getCompany() != null && computer.get().getCompany().getId() != 0) {
+				request.setInt(4, computer.get().getCompany().getId());
 			}else {
 
 				request.setNull(4, Types.BIGINT);

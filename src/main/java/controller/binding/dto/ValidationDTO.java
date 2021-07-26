@@ -1,10 +1,7 @@
 package controller.binding.dto;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
-
 import logger.CDBLogger;
-import ui.CLImain;
 
 public class ValidationDTO {
 
@@ -27,15 +24,13 @@ public class ValidationDTO {
 		valideCompanyId(computerDTO);
 	}
 
-	private void valideCompanyId(ComputerAddDTO computerDTO) {
+	private void valideCompanyId(ComputerAddDTO computerDTO) throws Exception {
 		String computerCompanyId = computerDTO.getCompanyId();
-		if( !computerCompanyId.isEmpty() & computerCompanyId != null) {
-			try {
-				Integer.parseInt(computerCompanyId);
-			} catch (Exception e) {
-				
-			}
-
+		if(computerCompanyId == null |  computerCompanyId.isEmpty()) {
+			// remonter une erreur
+			throw new Exception("companyid == null or empty");
+		} else {
+			Integer.parseInt(computerCompanyId);
 		}
 
 	}
@@ -44,52 +39,37 @@ public class ValidationDTO {
 		String computerIntroduced = computerDTO.getIntroduced();
 		String computerDiscontinued = computerDTO.getDiscontinued();
 
-		if( !computerIntroduced.isEmpty() & computerIntroduced != null) {
-
-			try {
-
-				LocalDate.parse(computerIntroduced);
-
-
-			} catch (DateTimeParseException e) {
-
+		if(computerIntroduced == null |  computerIntroduced.isEmpty()) {
+			if(computerDiscontinued == null | computerDiscontinued.isEmpty()) {
+				// introduced isn't empty so parse discontinued
+			} else {
+				throw new Exception("discontinued != null and not empty with not null or empty intoduced date");
 			}
+			
 
-			if( !computerDiscontinued.isEmpty() & computerDiscontinued != null) {
+		} else {
 
-				try {
-
-					if(LocalDate.parse(computerDiscontinued).isBefore(LocalDate.parse(computerIntroduced))) {
-						CDBLogger.logInfo(ValidationDTO.class.toString(), new Exception("Impossible Date Timeline")) ;
-					}
-				} catch (DateTimeParseException e) {
-
-				}
-
-
-
-			}
-		} 
-		else {
-			if( !computerDiscontinued.isEmpty() & computerDiscontinued != null) {
-
-				try {
+			LocalDate.parse(computerIntroduced);
+			
+			if(computerDiscontinued == null | computerDiscontinued.isEmpty()) {
+				// discontinued empty 
+								
+			} else {
+				
+				if(LocalDate.parse(computerDiscontinued).isBefore(LocalDate.parse(computerIntroduced))) {
+					throw new Exception("Impossible Date Timeline") ;
+				}  else {
 					LocalDate.parse(computerDiscontinued);
-
-				} catch (Exception e) {
-
 				}
-
+				
 			}
 		}
-
 	}
 
 	private void valideName(ComputerAddDTO computerDTO) throws Exception {
 		String computerName = computerDTO.getName();
 		if( computerName.isEmpty() | computerName == null) {
-			CDBLogger.logInfo(ValidationDTO.class.toString(), new Exception("name null or empty")) ;
-			throw new Exception();
+			throw new Exception("name null or empty") ;
 		}
 	}
 

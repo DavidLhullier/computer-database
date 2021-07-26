@@ -25,11 +25,11 @@ public class ComputerController {
 	public List<Computer> getAllComputer(){
 		return computerService.getAllComputer();
 	}
-
+/* ilo faut revoir cette méthode car elle utilise optional pour les servlet # plus tard
 	public void addComputer(Computer computer) {
 		computerService.addComputer(computer);
 	}
-
+*/
 	public Computer getComputerById(int id) {
 		return computerService.getComputer(id);
 	}

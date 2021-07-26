@@ -1,6 +1,7 @@
 package service;
 
 import java.util.List;
+import java.util.Optional;
 
 import controller.CompanyController;
 import model.Computer;
@@ -28,7 +29,7 @@ public class ComputerService {
 		return computerDAO.getAllComputer();
 	}
 
-	public void addComputer(Computer computer) {
+	public void addComputer(Optional<Computer> computer) {
 		computerDAO.addComputer(computer);
 	}
 
