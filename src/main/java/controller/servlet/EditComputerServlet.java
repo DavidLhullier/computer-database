@@ -59,8 +59,7 @@ public class EditComputerServlet extends HttpServlet {
 		request.setAttribute("computerIntroduced", computer.getIntroduced());
 		request.setAttribute("computerDiscontinued", computer.getDiscontinued());
 		request.setAttribute("company", computer.getCompany());
-		//		request.setAttribute("companyName", computer.getCompany().getName());
-
+		
 		this.getServletContext().getRequestDispatcher("/WEB-INF/view/editComputer.jsp").forward(request, response);
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}

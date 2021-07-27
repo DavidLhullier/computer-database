@@ -5,17 +5,5 @@
     <servlet-name>DashboardServlet</servlet-name>
     <servlet-class>controller.servlet.DashboardServlet</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>DashboardServlet</servlet-name>
-    <url-pattern>/bonjourZERATOR</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>AddComputerServlet</servlet-name>
-    <servlet-class>controller.servlet.AddComputerServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>AddComputerServlet</servlet-name>
-    <url-pattern>/bonjourAdder</url-pattern>
-  </servlet-mapping>
  
 </web-app>

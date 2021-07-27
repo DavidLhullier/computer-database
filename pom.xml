@@ -28,6 +28,9 @@
 		<mockito-all.version>1.10.19</mockito-all.version>
 		<h2database.version>1.4.198</h2database.version>
 		<tomcat.version>9.0.46</tomcat.version>
+		<hikariCP.version>3.4.5</hikariCP.version>
+		<slf4j.version>1.7.30</slf4j.version>
+
 
 		
 
@@ -48,6 +51,13 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 			<version>${jstl.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.glassfish.web</groupId>
+			<artifactId>jakarta.servlet.jsp.jstl</artifactId>
+			<version>2.0.0</version>
+			<scope>runtime</scope>
 		</dependency>
 
 
@@ -101,6 +111,24 @@
 			<version>${h2database.version}</version>
 			<scope>test</scope>
 		</dependency>
+		
+		
+		<dependency>
+   		 	<groupId>com.zaxxer</groupId>
+ 		 	<artifactId>HikariCP</artifactId>
+   			 <version>${hikariCP.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
 
 	</dependencies>
 
@@ -131,8 +159,6 @@
 			</plugin>
 		</plugins>
 	</build>
-
-
 
 
 

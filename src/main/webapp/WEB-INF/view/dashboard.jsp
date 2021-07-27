@@ -11,10 +11,6 @@
 <style><%@include file="../../static/css/bootstrap.min.css"%></style>
 <style><%@include file="../../static/css/font-awesome.css"%></style>
 <style><%@include file="../../static/css/main.css"%></style>
-
-<style><%@include file="../../static/js/jquery.min.js"%></style>
-<style><%@include file="../../static/js/bootstrap.min.js"%></style>
-<style><%@include file="../../static/js/dashboard.js"%></style>
 	
 	
 </head>
@@ -32,7 +28,7 @@
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
 					<form id="searchForm" action="#" method="GET" class="form-inline">
-
+				<!--  ici on search -->
 						<input type="search" id="searchbox" name="search"
 							class="form-control" placeholder="Search name" /> <input
 							type="submit" id="searchsubmit" value="Filter by name"
@@ -41,10 +37,9 @@
 				</div>
 				<div class="pull-right">
 					<a class="btn btn-success" id="addComputer" href="/computer-database/AddComputerServlet">Add Computer</a> 
+						
 						<a class="btn btn-default" id="editComputer" 
-						href="
-						<c:url value="/EditComputerServlet"><c:param name="id" value="#"/></c:url>
-						"
+						href="#"
 						onclick="$.fn.toggleEditMode();">Edit</a>
 				</div>
 			</div>
@@ -62,12 +57,15 @@
 						<!-- Table header for Computer Name -->
 
 						<th class="editMode" style="width: 60px; height: 22px;"><input
-							type="checkbox" id="selectall" /> <span
+							type="checkbox" id="selectall" />
+							 <span
 							style="vertical-align: top;"> - <a href="#"
 								id="deleteSelected" onclick="$.fn.deleteSelected();"> <i
 									class="fa fa-trash-o fa-lg"></i>
-							</a>
-						</span></th>
+								</a>
+							</span></th>
+							
+							<!-- ici on order by  -->
 						<th>Computer name</th>
 						<th>Introduced date</th>
 						<!-- Table header for Discontinued Date -->
@@ -82,8 +80,8 @@
 				<tbody id="results">
 					<c:forEach var="computer" items="${listComputer}">
 						<tr>
-							<td class="editMode"><input type="checkbox" name="cb"
-								class="cb" value="0"></td>
+							<td class="editMode"><input type="checkbox" id="id" name="cb"
+								class="cb" value=${computer.id }>${computer.id }</td>
 							<td><a
 							href="
 							<c:url value="/EditComputerServlet"><c:param name="id" value="${ computer.id }"/></c:url>
@@ -150,7 +148,9 @@
 	</div>
 	</footer>
 	
-
+	<script src="${pageContext.request.contextPath}/static/js/jquery.min.js"></script>
+	<script src="${pageContext.request.contextPath}/static/js/bootstrap.min.js"></script>
+	<script src="${pageContext.request.contextPath}/static/js/dashboard.js"></script>
 
 </body>
 </html>

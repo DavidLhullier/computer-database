@@ -1,6 +1,7 @@
 package controller.servlet;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import logger.CDBLogger;
 import model.Computer;
 import model.Page;
 import service.ComputerService;
@@ -21,6 +23,8 @@ public class DashboardServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ComputerService computerService;
 	private Page page = new Page();
+	private static final String VUE_DASHBOARD = "/computer-database/DashboardServlet";
+	 
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -63,6 +67,18 @@ public class DashboardServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		List<String> selection = Arrays.asList(request.getParameter("selection").split(","));
+		
+		try {
+			selection.stream()
+			.map(s -> Integer.valueOf(s) )
+			.forEach(id -> this.computerService.deleteComputerById(id) );
+		}catch (Exception e) {
+			
+			CDBLogger.logWarn(DashboardServlet.class.toString(), e);
+		}
+		
+		response.sendRedirect(VUE_DASHBOARD);
 
 	}
 

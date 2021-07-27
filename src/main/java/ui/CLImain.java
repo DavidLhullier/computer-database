@@ -1,18 +1,25 @@
 package ui;
 
-import java.time.LocalDate;
+import java.sql.SQLException;
+import java.util.List;
 
-import controller.CompanyController;
-import controller.ComputerController;
-import logger.CDBLogger;
-import model.Company;
+//import logger.CDBLogger;
 import model.Computer;
-import model.Computer.ComputerBuilder;
+import persistence.DataSource;
 
 public class CLImain {
 
 	public static void main(String[] args) {
-		CDBLogger.logInfo(CLImain.class.toString(), new Exception()) ;
+		//CDBLogger.logInfo(CLImain.class.toString(), new Exception()) ;
+		
+		
+		try {
+			List<Computer> listComputer = DataSource.fetchData();
+			listComputer.stream().forEach(c -> System.out.println(c));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		/*
 		CompanyController companyController = new CompanyController().getInstance();
