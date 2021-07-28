@@ -28,7 +28,9 @@ public class ComputerDAO {
 	private final String REQUEST_ADD_COMPUTER = "INSERT INTO computer(name, introduced, discontinued, company_id) VALUES (?, ?, ?, ?);";
 	private final String REQUEST_DELETE_ONE_COMPUTER_BY_ID = "DELETE FROM computer WHERE id = ? ;";
 	private final String REQUEST_EDIT_ONE_COMPUTER_BY_ID = "UPDATE computer SET name = ?, introduced = ?, discontinued = ? , company_id = ? WHERE id = ?;";
-
+	private final String REQUEST_GET_ALL_COMPUTER_WITH_RESEARCH_AND_ORDER_BY ="SELECT cp.id, cp.name, cp.introduced, cp.discontinued, cp.company_id, cny.name as company_name FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id WHERE cp.name LIKE '%?%' OR  cny.name LIKE '%?%' ORDER BY ? ? LIMIT ? OFFSET ?  ;"
+			+ "";
+	
 	//SELECT cp.id, cp.name, cp.introduced, cp.discontinued, cp.company_id, cny.name as company_name FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id WHERE cp.id = 4;
 
 	public ComputerDAO() {
@@ -216,6 +218,41 @@ public class ComputerDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return listComputer;
+	}
+	
+	
+	public List<Computer> getComputerResearch(String research, String order, String dir, Page page) {
+		List<Computer> listComputer = new ArrayList<>();
+		try( Connection cn = JDBC.getInstance().getConnection(); ){
+			
+			PreparedStatement request = cn.prepareStatement(REQUEST_GET_ALL_COMPUTER_WITH_RESEARCH_AND_ORDER_BY);
+			if(research == null || research.isEmpty()) {
+				request.setString(1, "");
+				request.setString(2, "");
+			} else {
+				request.setString(1, research);
+				request.setString(2, research);
+			}
+			if(order == null || order.isEmpty() ) {
+				request.setString(3, "cp.id");
+				request.setString(4, "ASC");
+			}else {
+				request.setString(3, order);
+				request.setString(4, dir);
+			}
+			
+			request.setInt(5, page.getNbElementByPage());
+			request.setInt(6, page.getNbElementByPage()*(page.getNumeroPage()-1) );
+
+			ResultSet rs = request.executeQuery();
+			while(rs.next()) {
+				listComputer.add(this.computerMapper.mapToComputer(rs));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 		return listComputer;
 	}
 

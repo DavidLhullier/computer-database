@@ -24,14 +24,15 @@
 
 	<section id="main">
 		<div class="container">
-			<h1 id="homeTitle">${ nbComputer } Computers found</h1>
+			<h1 id="homeTitle">
+				<c:out value="${page.nbElementDB }"/> Computers found</h1>
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
 					<form id="searchForm" action="#" method="GET" class="form-inline">
 				<!--  ici on search -->
 						<input type="search" id="searchbox" name="search"
 							class="form-control" placeholder="Search name" /> <input
-							type="submit" id="searchsubmit" value="Filter by name"
+							type="submit" id="searchsubmit" value="Filter by name and company"
 							class="btn btn-primary" />
 					</form>
 				</div>
@@ -66,12 +67,29 @@
 							</span></th>
 							
 							<!-- ici on order by  -->
-						<th>Computer name</th>
-						<th>Introduced date</th>
-						<!-- Table header for Discontinued Date -->
-						<th>Discontinued date</th>
-						<!-- Table header for Company -->
-						<th>Company</th>
+						<th><a href="?orderBy=computer.name,ASC"> <i
+								class="fa fa-fw  fa-angle-up  fa-clickable"></i>
+						</a> Computer name <a href="?orderBy=computer.name,DESC"> <i
+								class="fa fa-fw  fa-angle-down  fa-clickable"></i>
+						</a></th>
+
+						<th><a href="?orderBy=introduced,ASC"> <i
+								class="fa fa-fw  fa-angle-up  fa-clickable"></i>
+						</a> Introduced date <a href="?orderBy=introduced,DESC"> <i
+								class="fa fa-fw  fa-angle-down  fa-clickable"></i>
+						</a></th>
+						
+						<th><a href="?orderBy=discontinued,ASC"> 
+						<i class="fa fa-fw  fa-angle-ud  fa-clickable"></i>
+						</a> Discontinued date <a href="?orderBy=discontinued,DESC"> <i
+								class="fa fa-fw  fa-angle-down  fa-clickable"></i>
+						</a></th>
+
+						<th><a href="?orderBy=company.name,ASC"> <i
+								class="fa fa-fw  fa-angle-up  fa-clickable"></i>
+						</a> Company <a href="?orderBy=company.name,DESC"> <i
+								class="fa fa-fw  fa-angle-down  fa-clickable"></i>
+						</a></th>
 
 					</tr>
 				</thead>

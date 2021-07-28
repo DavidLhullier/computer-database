@@ -54,5 +54,8 @@ public class ComputerService {
 	public List<Computer> getComputerPage(Page page) {
 		return computerDAO.getComputerPage(page);
 	}
-
+	
+	public List<Computer> getComputerResearch(String research, String order, String dir, Page page){
+		return computerDAO.getComputerResearch(research, order, dir, page);
+	}
 }
