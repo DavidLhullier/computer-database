@@ -33,7 +33,10 @@ public class Page {
 		this.numeroPage = numeroPage;
 	}
 	
-	
-	
+	@Override
+	public String toString() {
+		return "Page [nbElementByPage=" + nbElementByPage + ", nbElementDB=" + nbElementDB + ", numeroPage="
+				+ numeroPage + "]";
+	}
 	
 }

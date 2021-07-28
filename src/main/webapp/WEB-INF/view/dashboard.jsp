@@ -113,6 +113,7 @@
 					</c:forEach>
 				</tbody>
 			</table>
+			
 		</div>
 	</section>
 
@@ -157,7 +158,7 @@
 				</a></li>
 			</ul>
 		<div class="btn-group btn-group-sm pull-right" role="group" >
-	         	<form method="GET">
+	         	<form id="nbElementByPage" action="#" method="GET">
 		        	<button type="submit" class="btn btn-default" name="nbElementByPage" value="10">10</button>
 		            <button type="submit" class="btn btn-default" name="nbElementByPage" value="50">50</button>
 		            <button type="submit" class="btn btn-default" name="nbElementByPage" value="100">100</button>

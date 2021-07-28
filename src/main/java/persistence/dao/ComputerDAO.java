@@ -22,15 +22,16 @@ public class ComputerDAO {
 	private static ComputerDAO instance;
 	private ComputerMapper computerMapper;
 	private final String REQUEST_COUNT_ALL = "SELECT COUNT(*) FROM computer ; ";
+	private final String REQUEST_COUNT_COMPUTER_WITH_SEARCH = "SELECT COUNT(*) FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id WHERE cp.name LIKE ? OR  cny.name LIKE ? ; ";
 	private final String REQUEST_GET_COMPUTER_PAGE = "SELECT cp.id, cp.name, cp.introduced, cp.discontinued, cp.company_id, cny.name as company_name FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id LIMIT ? OFFSET ? ;";
 	private final String REQUEST_GET_ALL_COMPUTER = "SELECT cp.id, cp.name, cp.introduced, cp.discontinued, cp.company_id, cny.name as company_name FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id ;";
 	private final String REQUEST_GET_ONE_COMPUTER_BY_ID = "SELECT cp.id, cp.name, cp.introduced, cp.discontinued, cp.company_id, cny.name as company_name FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id WHERE cp.id = ? ;";
 	private final String REQUEST_ADD_COMPUTER = "INSERT INTO computer(name, introduced, discontinued, company_id) VALUES (?, ?, ?, ?);";
 	private final String REQUEST_DELETE_ONE_COMPUTER_BY_ID = "DELETE FROM computer WHERE id = ? ;";
 	private final String REQUEST_EDIT_ONE_COMPUTER_BY_ID = "UPDATE computer SET name = ?, introduced = ?, discontinued = ? , company_id = ? WHERE id = ?;";
-	private final String REQUEST_GET_ALL_COMPUTER_WITH_RESEARCH_AND_ORDER_BY ="SELECT cp.id, cp.name, cp.introduced, cp.discontinued, cp.company_id, cny.name as company_name FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id WHERE cp.name LIKE '%?%' OR  cny.name LIKE '%?%' ORDER BY ? ? LIMIT ? OFFSET ?  ;"
-			+ "";
-	
+	private final String REQUEST_GET_ALL_COMPUTER_WITH_RESEARCH_AND_ORDER_BY ="SELECT cp.id, cp.name, cp.introduced, cp.discontinued, cp.company_id, cny.name as company_name FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id WHERE cp.name LIKE ? OR  cny.name LIKE ? ORDER BY ? ? LIMIT ? OFFSET ? ;";
+	private final String END_REQUEST_SEARCH_COMPUTER = " LIMIT ? OFFSET ? ;";
+
 	//SELECT cp.id, cp.name, cp.introduced, cp.discontinued, cp.company_id, cny.name as company_name FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id WHERE cp.id = 4;
 
 	public ComputerDAO() {
@@ -224,6 +225,7 @@ public class ComputerDAO {
 	
 	public List<Computer> getComputerResearch(String research, String order, String dir, Page page) {
 		List<Computer> listComputer = new ArrayList<>();
+		
 		try( Connection cn = JDBC.getInstance().getConnection(); ){
 			
 			PreparedStatement request = cn.prepareStatement(REQUEST_GET_ALL_COMPUTER_WITH_RESEARCH_AND_ORDER_BY);
@@ -231,21 +233,42 @@ public class ComputerDAO {
 				request.setString(1, "");
 				request.setString(2, "");
 			} else {
-				request.setString(1, research);
-				request.setString(2, research);
+				request.setString(1, "%"+research+"%");
+				request.setString(2, "%"+research+"%");
 			}
+			
 			if(order == null || order.isEmpty() ) {
 				request.setString(3, "cp.id");
 				request.setString(4, "ASC");
 			}else {
-				request.setString(3, order);
-				request.setString(4, dir);
+				request.setString(3, "cp.name");
+				request.setString(4, "ASC");
 			}
-			
 			request.setInt(5, page.getNbElementByPage());
 			request.setInt(6, page.getNbElementByPage()*(page.getNumeroPage()-1) );
-
+			System.out.println(request);
 			ResultSet rs = request.executeQuery();
+			/*
+			 * String midRequest = "";
+			if(order == null || order.isEmpty() ) {
+				midRequest = midRequest + " cp.id ";
+				midRequest = midRequest + " ASC ";
+			}else {
+				midRequest = midRequest +" "+ order +" ";
+				midRequest = midRequest +" "+ dir +" ";
+			}
+			
+			
+			PreparedStatement endRequest = cn.prepareStatement(END_REQUEST_SEARCH_COMPUTER);
+			 
+			endRequest.setInt(1, page.getNbElementByPage());
+			endRequest.setInt(2, page.getNbElementByPage()*(page.getNumeroPage()-1) );
+			
+			String finalRequest = String.valueOf(request)+ midRequest + endRequest.toString();
+			System.out.println(finalRequest);
+			PreparedStatement ps = cn.prepareStatement(finalRequest);
+			ResultSet rs = ps.executeQuery();
+			 */
 			while(rs.next()) {
 				listComputer.add(this.computerMapper.mapToComputer(rs));
 			}
@@ -254,6 +277,31 @@ public class ComputerDAO {
 		}
 
 		return listComputer;
+	}
+
+	
+
+	public int countAllComputerWithSearch(String research) {
+		
+		int nbComputer = 0;
+		try( Connection cn = JDBC.getInstance().getConnection(); ){
+			PreparedStatement request = cn.prepareStatement(REQUEST_COUNT_COMPUTER_WITH_SEARCH);
+			if(research == null || research.isEmpty()) {
+				request.setString(1, "");
+				request.setString(2, "");
+			} else {
+				request.setString(1, "%"+research+"%");
+				request.setString(2, "%"+research+"%");
+			}
+			ResultSet rs = request.executeQuery();
+
+			rs.next();
+			nbComputer = rs.getInt(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return nbComputer;
 	}
 
 
