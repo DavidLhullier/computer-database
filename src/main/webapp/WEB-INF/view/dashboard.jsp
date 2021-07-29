@@ -17,7 +17,7 @@
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
-			<a class="navbar-brand" href="/computer-database/DashboardServlet"> Application -
+			<a class="navbar-brand" href="/computer-database/DashboardServlet?search="> Application -
 				Computer Database </a>
 		</div>
 	</header>
@@ -30,11 +30,16 @@
 				<div class="pull-left">
 					<form id="searchForm" action="#" method="GET" class="form-inline">
 				<!--  ici on search -->
-						<input type="search" id="searchbox" name="search"
-							class="form-control" placeholder="Search name" /> <input
+				
+				<input type="search" id="searchbox" name="search"
+							class="form-control" 
+							placeholder="Search name" />
+				<input
+							
 							type="submit" id="searchsubmit" value="Filter by name and company"
 							class="btn btn-primary" />
 					</form>
+					
 				</div>
 				<div class="pull-right">
 					<a class="btn btn-success" id="addComputer" href="/computer-database/AddComputerServlet">Add Computer</a> 

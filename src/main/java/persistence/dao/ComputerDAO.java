@@ -70,7 +70,7 @@ public class ComputerDAO {
 			if(computer.get().getName() != null) {
 				request.setString(1, computer.get().getName());
 			}
-
+			fa fa-fw  fa-angle-up  fa-
 			if(computer.get().getIntroduced() != null) {
 				request.setDate(2, Date.valueOf(computer.get().getIntroduced()) );
 			}else {
@@ -246,7 +246,7 @@ public class ComputerDAO {
 			}
 			request.setInt(5, page.getNbElementByPage());
 			request.setInt(6, page.getNbElementByPage()*(page.getNumeroPage()-1) );
-			System.out.println(request);
+			
 			ResultSet rs = request.executeQuery();
 			/*
 			 * String midRequest = "";
@@ -275,7 +275,7 @@ public class ComputerDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
+		//finalrequest + order + endfinal requets
 		return listComputer;
 	}
 

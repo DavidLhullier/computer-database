@@ -32,8 +32,8 @@ public class DashboardServlet extends HttpServlet {
 	private final String ORDER_BY_COMPUTER_INTRODUCED ="cp.introduced";
 	private final String ORDER_BY_COMPUTER_DISCONTINUED ="cp.discontinued";
 	private final String RESEARCH_EMPTY ="";
-	 
-       
+	private boolean isSearching = false;
+	private String lemotquejechere ="";
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -53,11 +53,20 @@ public class DashboardServlet extends HttpServlet {
 		
 		String search = request.getParameter("search");
 		
-		if(search!=null && !search.isEmpty()) {
-			search = search +","+ ORDER_BY_COMPUTER_NAME +","+ ASCENDING;
-			System.out.println(search);
+		
+		if(search!=null ) {
+			isSearching = true;
+			lemotquejechere=search;
+			this.page.setNumeroPage(1);
+		}
+		
+		if(!lemotquejechere.isEmpty()) {
+			search = lemotquejechere +","+ ORDER_BY_COMPUTER_NAME +","+ ASCENDING;
+			CDBLogger.logInfo(search);
 			List<String> research = Arrays.asList(search.split(","));
-			updateSearch(request, research);
+			this.updateSearch(request, research);
+
+			request.setAttribute("search",search);
 		} else {
 			int nbComputer = computerService.countAllComputer();
 			page.setNbElementDB(nbComputer);
@@ -119,20 +128,22 @@ public class DashboardServlet extends HttpServlet {
 	private void updatePage(HttpServletRequest request) {
 		String nbElement = request.getParameter("nbElementByPage");
 		String numPage = request.getParameter("page");
-		
 		try {
 			
 			if(numPage != null) {
 				this.page.setNumeroPage(Integer.valueOf(numPage));
+				if  (Integer.valueOf(numPage) <= page.getTotalPage() ) {
+					page.setNumeroPage(Integer.valueOf(numPage));
+				}
 			}
 			
 			if(nbElement != null) {
+				
 				this.page.setNbElementByPage(Integer.valueOf(nbElement));
+				this.page.setNumeroPage(1);
 			}
 			
-			if  (Integer.valueOf(numPage) <= page.getTotalPage() ) {
-				page.setNumeroPage(Integer.valueOf(numPage));
-			}
+			
 			int nbComputer = computerService.countAllComputer();
 			this.page.setNbElementDB(nbComputer);
 			
@@ -141,7 +152,7 @@ public class DashboardServlet extends HttpServlet {
 			e.printStackTrace();
 			//CDBLogger.logInfo(DashboardServlet.class.toString(), e);
 		}
-		
+		CDBLogger.logInfo(this.page.toString());
 	}
 	
 	private void updateSearch(HttpServletRequest request, List<String> searchRequest) {
@@ -181,8 +192,6 @@ public class DashboardServlet extends HttpServlet {
 				request.setAttribute("listComputer", listComputer);
 				request.setAttribute("nbComputer", this.page.getNbElementDB());
 				
-				System.out.println(request.getAttribute("page"));
-				System.out.println(request.getAttribute("listComputer"));
 			} catch (Exception e) {
 				CDBLogger.logWarn(DashboardServlet.class.toString(), e);
 			}
