@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Company;
-import persistence.JDBC;
+import persistence.DataSource;
 import persistence.binding.mapper.CompanyMapper;
 
 public class CompanyDAO {
@@ -37,9 +37,9 @@ public class CompanyDAO {
 	public List<Company> getAllCompany() {
 		List<Company> listCompany = new ArrayList<>();
 
-		try( Connection cn = JDBC.getInstance().getConnection(); ) {
-			Statement stmt = cn.createStatement();
-			ResultSet rs = stmt.executeQuery(REQUEST_GET_ALL_COMPANY);
+		try( Connection con = DataSource.getConnection();
+				Statement stmt = con.createStatement();
+				ResultSet rs = stmt.executeQuery(REQUEST_GET_ALL_COMPANY); ) {
 
 			while(rs.next()) {
 				listCompany.add(this.companyMapper.mapToCompany(rs));
@@ -54,8 +54,8 @@ public class CompanyDAO {
 	public Company getCompanyById(int id) {
 		Company company = new Company();
 
-		try( Connection cn = JDBC.getInstance().getConnection(); ){
-			PreparedStatement request = cn.prepareStatement(REQUEST_GET_ONE_COMPANY_BY_ID);
+		try( Connection con = DataSource.getConnection(); 
+				PreparedStatement request = con.prepareStatement(REQUEST_GET_ONE_COMPANY_BY_ID);){
 			request.setInt(1, id);
 			ResultSet rs = request.executeQuery();
 

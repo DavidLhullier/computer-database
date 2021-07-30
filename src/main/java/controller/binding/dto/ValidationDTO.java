@@ -1,7 +1,6 @@
 package controller.binding.dto;
 
 import java.time.LocalDate;
-import logger.CDBLogger;
 
 public class ValidationDTO {
 

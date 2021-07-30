@@ -5,17 +5,14 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import logger.CDBLogger;
 import model.Computer;
-import model.Computer.ComputerBuilder;
 import model.Page;
-import persistence.JDBC;
+import persistence.DataSource;
 import persistence.binding.mapper.ComputerMapper;
 
 public class ComputerDAO {
@@ -51,9 +48,10 @@ public class ComputerDAO {
 	public List<Computer> getAllComputer() {
 		List<Computer> listComputer = new ArrayList<>();
 
-		try(Connection cn = JDBC.getInstance().getConnection();){
-			Statement stmt = cn.createStatement();
-			ResultSet rs = stmt.executeQuery(REQUEST_GET_ALL_COMPUTER);
+		try(Connection con = DataSource.getConnection();
+	            PreparedStatement request = con.prepareStatement( REQUEST_GET_ALL_COMPUTER );
+	            ResultSet rs = request.executeQuery();){
+
 			while(rs.next()) {
 				listComputer.add(this.computerMapper.mapToComputer(rs));
 			}
@@ -65,9 +63,9 @@ public class ComputerDAO {
 	}
 
 	public void addComputer(Optional<Computer> computer) {
-		try( Connection cn = JDBC.getInstance().getConnection(); ){
-			PreparedStatement request = cn.prepareStatement(REQUEST_ADD_COMPUTER);
-
+		try( Connection con = DataSource.getConnection();
+	            PreparedStatement request = con.prepareStatement( REQUEST_ADD_COMPUTER );){
+			
 			if(computer.get().getName() != null) {
 				request.setString(1, computer.get().getName());
 			}
@@ -98,8 +96,8 @@ public class ComputerDAO {
 
 	public Computer getComputerById(int id) {
 		Computer computer = new Computer();
-		try( Connection cn = JDBC.getInstance().getConnection(); ){
-			PreparedStatement request = cn.prepareStatement(REQUEST_GET_ONE_COMPUTER_BY_ID);
+		try( Connection con = DataSource.getConnection();
+	            PreparedStatement request = con.prepareStatement( REQUEST_GET_ONE_COMPUTER_BY_ID ); ){
 			request.setInt(1, id);
 			ResultSet rs = request.executeQuery();
 
@@ -115,8 +113,9 @@ public class ComputerDAO {
 	public void deleteComputerById(int id) {
 
 
-		try( Connection cn = JDBC.getInstance().getConnection(); ){
-			PreparedStatement request = cn.prepareStatement(REQUEST_DELETE_ONE_COMPUTER_BY_ID);
+		try( Connection con = DataSource.getConnection();
+	            PreparedStatement request = con.prepareStatement( REQUEST_DELETE_ONE_COMPUTER_BY_ID ); ){
+
 			request.setInt(1, id);
 			request.executeUpdate();
 
@@ -129,15 +128,17 @@ public class ComputerDAO {
 	public void editComputerById(int id, Optional<Computer> computer) {
 
 		Computer computerDB = new Computer();
-		try( Connection cn = JDBC.getInstance().getConnection(); ){
-			PreparedStatement requestDB = cn.prepareStatement(REQUEST_GET_ONE_COMPUTER_BY_ID);
+		try( Connection con = DataSource.getConnection();
+	            PreparedStatement requestDB = con.prepareStatement( REQUEST_GET_ONE_COMPUTER_BY_ID ); 
+				PreparedStatement request = con.prepareStatement(REQUEST_EDIT_ONE_COMPUTER_BY_ID);){
+			
 			requestDB.setInt(1, id);
 			ResultSet rs = requestDB.executeQuery();
 
 			rs.next();
 			computerDB = this.computerMapper.mapToComputer(rs);
 
-			PreparedStatement request = cn.prepareStatement(REQUEST_EDIT_ONE_COMPUTER_BY_ID);
+			
 			if(computer.get().getName() == null) {
 				if(computerDB.getName() != null) {
 					request.setString(1, computerDB.getName());
@@ -182,10 +183,10 @@ public class ComputerDAO {
 
 	public int countAllComputer() {
 		int nbComputer = 0;
-		try( Connection cn = JDBC.getInstance().getConnection(); ){
-			PreparedStatement request = cn.prepareStatement(REQUEST_COUNT_ALL);
-			ResultSet rs = request.executeQuery();
-
+		try( Connection con = DataSource.getConnection();
+	            PreparedStatement request = con.prepareStatement( REQUEST_COUNT_ALL );
+				ResultSet rs = request.executeQuery();){
+			
 			rs.next();
 			nbComputer = rs.getInt(1);
 		} catch (SQLException e) {
@@ -198,8 +199,8 @@ public class ComputerDAO {
 	public List<Computer> getComputerPage(Page page ,String orderBy, String dir) {
 		List<Computer> listComputer = new ArrayList<>();
 
-		try(Connection cn = JDBC.getInstance().getConnection();){
-			PreparedStatement request = cn.prepareStatement(REQUEST_GET_COMPUTER_PAGE + "ORDER BY " + orderBy + " "+ dir + END_REQUEST_SEARCH_COMPUTER);
+		try(Connection con = DataSource.getConnection();
+	            PreparedStatement request = con.prepareStatement( REQUEST_GET_COMPUTER_PAGE + "ORDER BY " + orderBy + " "+ dir + END_REQUEST_SEARCH_COMPUTER );){
 			request.setInt(1, page.getNbElementByPage());
 			request.setInt(2, page.getNbElementByPage()*(page.getNumeroPage()-1) );
 
@@ -218,9 +219,9 @@ public class ComputerDAO {
 	public List<Computer> getComputerResearch(String research, String order, String dir, Page page) {
 		List<Computer> listComputer = new ArrayList<>();
 		
-		try( Connection cn = JDBC.getInstance().getConnection(); ){
-			PreparedStatement request = cn.prepareStatement(REQUEST_GET_ALL_COMPUTER_WITH_RESEARCH_AND_ORDER_BY +
-					order + " " + dir + END_REQUEST_SEARCH_COMPUTER);
+		try( Connection con = DataSource.getConnection();
+	            PreparedStatement request = con.prepareStatement( REQUEST_GET_ALL_COMPUTER_WITH_RESEARCH_AND_ORDER_BY +
+						order + " " + dir + END_REQUEST_SEARCH_COMPUTER); ){
 			if(research == null || research.isEmpty()) {
 				request.setString(1, "");
 				request.setString(2, "");
@@ -249,8 +250,8 @@ public class ComputerDAO {
 	public int countAllComputerWithSearch(String research) {
 		
 		int nbComputer = 0;
-		try( Connection cn = JDBC.getInstance().getConnection(); ){
-			PreparedStatement request = cn.prepareStatement(REQUEST_COUNT_COMPUTER_WITH_SEARCH);
+		try( Connection con = DataSource.getConnection();
+	            PreparedStatement request = con.prepareStatement( REQUEST_COUNT_COMPUTER_WITH_SEARCH ); ){
 			if(research == null || research.isEmpty()) {
 				request.setString(1, "");
 				request.setString(2, "");

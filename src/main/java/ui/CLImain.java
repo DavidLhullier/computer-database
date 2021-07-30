@@ -1,11 +1,10 @@
 package ui;
 
-import java.sql.SQLException;
 import java.util.List;
 
-//import logger.CDBLogger;
+import controller.CompanyController;
+import controller.ComputerController;
 import model.Computer;
-import persistence.DataSource;
 
 public class CLImain {
 
@@ -13,23 +12,18 @@ public class CLImain {
 		//CDBLogger.logInfo(CLImain.class.toString(), new Exception()) ;
 		
 		
-		try {
-			List<Computer> listComputer = DataSource.fetchData();
-			listComputer.stream().forEach(c -> System.out.println(c));
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		/*
-		CompanyController companyController = new CompanyController().getInstance();
+		new CompanyController();
+		//CompanyController companyController = CompanyController.getInstance();
 		//List<Company> listCompany =  companyController.getAllCompany();
 		//listCompany.stream().forEach(c -> System.out.println(c)); 
 		
 		
-		ComputerController computerController = new ComputerController().getInstance();
-		//List<Computer> listComputer = computerController.getAllComputer();
-		//listComputer.stream().forEach(c -> System.out.println(c));
+		new ComputerController();
+		ComputerController computerController = ComputerController.getInstance();
+		List<Computer> listComputer = computerController.getAllComputer();
+		listComputer.stream().forEach(c -> System.out.println(c));
+		
+		/*
 		
 		int id = 1;
 		Company company = companyController.getCompanyById(id);

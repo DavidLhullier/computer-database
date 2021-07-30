@@ -1,20 +1,11 @@
 package persistence;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 import logger.CDBLogger;
-import model.Company;
-import model.Computer;
-import model.Computer.ComputerBuilder;
 
 public class DataSource {
 
@@ -25,6 +16,13 @@ public class DataSource {
 	private final static String PASSWORD = "qwerty1234";
 
     static {
+
+        try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         config.setJdbcUrl( URL );
         config.setUsername( LOGIN );
         config.setPassword( PASSWORD );
@@ -45,39 +43,5 @@ public class DataSource {
     }
     
     
-    public static List<Computer> fetchData() throws SQLException {
-        String SQL_QUERY = "select * from computer;";
-        List<Computer> listComputer = null;
-        try (Connection con = DataSource.getConnection();
-            PreparedStatement pst = con.prepareStatement( SQL_QUERY );
-            ResultSet rs = pst.executeQuery();) {
-                listComputer = new ArrayList<>();
-                ComputerBuilder computerBuilder =  new ComputerBuilder();
-                while ( rs.next() ) {
-                	
-        			computerBuilder.setId(rs.getInt( "id")).
-                				setName(rs.getString("name"));
-        			
-        			if(rs.getDate("introduced") != null) {
-        				LocalDate tmpDate = rs.getDate("introduced").toLocalDate();
-        				computerBuilder.setIntroduced(tmpDate);
-        			}
-
-        			if(rs.getDate("discontinued") != null) {
-        				LocalDate tmpDate = rs.getDate("discontinued").toLocalDate();
-        				computerBuilder.setDiscontinued(tmpDate);
-        			}
-        			
-
-        			String tmpString = rs.getString("company_id");
-        			if(tmpString != null) {
-        				Company company = new Company(Integer.valueOf(tmpString),"ctvfygbuh");
-        				computerBuilder.setCompany(company);
-        			}
-                    Computer computer = computerBuilder.build();
-                    listComputer.add(computer);
-                }
-    	} 
-        return listComputer;
-    }
+    
 }
