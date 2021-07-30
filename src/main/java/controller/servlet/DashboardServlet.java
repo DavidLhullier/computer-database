@@ -34,6 +34,8 @@ public class DashboardServlet extends HttpServlet {
 	private final String RESEARCH_EMPTY ="";
 	private boolean isSearching = false;
 	private String lemotquejechere ="";
+	private String orderBy = "cp.id";
+	private String dir = "ASC";
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -52,7 +54,12 @@ public class DashboardServlet extends HttpServlet {
 		
 		
 		String search = request.getParameter("search");
-		
+		if(request.getParameter("orderBy") != null) {
+			List<String> orderByDir = Arrays.asList(request.getParameter("orderBy").split(","));
+			orderBy = orderByDir.get(0);
+			dir = orderByDir.get(1);
+			this.updateOrderBy(orderBy, dir);
+		}
 		
 		if(search!=null ) {
 			isSearching = true;
@@ -61,8 +68,11 @@ public class DashboardServlet extends HttpServlet {
 		}
 		
 		if(!lemotquejechere.isEmpty()) {
-			search = lemotquejechere +","+ ORDER_BY_COMPUTER_NAME +","+ ASCENDING;
-			CDBLogger.logInfo(search);
+			
+			
+			
+			search = lemotquejechere +","+ orderBy +","+ dir;
+			//CDBLogger.logInfo(search);
 			List<String> research = Arrays.asList(search.split(","));
 			this.updateSearch(request, research);
 
@@ -70,7 +80,7 @@ public class DashboardServlet extends HttpServlet {
 		} else {
 			int nbComputer = computerService.countAllComputer();
 			page.setNbElementDB(nbComputer);
-			List<Computer> listComputer = computerService.getComputerPage(page);
+			List<Computer> listComputer = computerService.getComputerPage(page,orderBy,dir);
 			request.setAttribute("listComputer", listComputer);
 			request.setAttribute("nbComputer", nbComputer);
 		}
@@ -152,39 +162,17 @@ public class DashboardServlet extends HttpServlet {
 			e.printStackTrace();
 			//CDBLogger.logInfo(DashboardServlet.class.toString(), e);
 		}
-		CDBLogger.logInfo(this.page.toString());
+		//CDBLogger.logInfo(this.page.toString());
 	}
 	
 	private void updateSearch(HttpServletRequest request, List<String> searchRequest) {
-		if(searchRequest.get(0) != null) {
-			String orderBy = "";
-			switch(searchRequest.get(1)) {
-				case "computerName":
-					orderBy = ORDER_BY_COMPUTER_NAME;
-					break;
-				case "introduced":
-					orderBy = ORDER_BY_COMPUTER_INTRODUCED;
-					break;
-				case "discontinued":
-					orderBy = ORDER_BY_COMPUTER_DISCONTINUED;
-					break;
-				case "companyName":
-					orderBy = ORDER_BY_COMPANY_NAME;
-					break;
-				default :
-					orderBy = ORDER_BY_COMPUTER_ID;
-			}
-			String dir ="";
-			if(searchRequest.get(2) == ASCENDING) {
-				dir = ASCENDING;
-			} else {
-				dir = DESCENDING;
-			}
-			
+		//CDBLogger.logInfo(DashboardServlet.class.toString(), searchRequest.toString());
+		this.updateOrderBy(searchRequest.get(1), searchRequest.get(2));
+		
 			
 			try {
 				
-				List<Computer> listComputer = this.computerService.getComputerResearch(searchRequest.get(0), ORDER_BY_COMPUTER_NAME, ASCENDING, page);
+				List<Computer> listComputer = this.computerService.getComputerResearch(searchRequest.get(0), orderBy, dir, page);
 				int nbComputer = computerService.countAllComputerWithSearch(searchRequest.get(0));
 				this.page.setNbElementDB(nbComputer);
 				
@@ -199,6 +187,31 @@ public class DashboardServlet extends HttpServlet {
 			
 			
 		}
+
+	private void updateOrderBy(String orderBy, String dir) {
+		if(orderBy != null) {
+			switch(orderBy) {
+				case "computer.name":
+					this.orderBy = ORDER_BY_COMPUTER_NAME;
+					break;
+				case "introduced":
+					this.orderBy = ORDER_BY_COMPUTER_INTRODUCED;
+					break;
+				case "discontinued":
+					this.orderBy = ORDER_BY_COMPUTER_DISCONTINUED;
+					break;
+				case "company.name":
+					this.orderBy = ORDER_BY_COMPANY_NAME;
+					break;
+				default :
+					this.orderBy = ORDER_BY_COMPUTER_ID;
+			}
+			if(dir.equals(ASCENDING)) {
+				this.dir = ASCENDING;
+			} else {
+				this.dir = DESCENDING;
+			} 		
+	}
 		
 		
 	}

@@ -51,8 +51,8 @@ public class ComputerService {
 		return computerDAO.countAllComputer();
 	}
 
-	public List<Computer> getComputerPage(Page page) {
-		return computerDAO.getComputerPage(page);
+	public List<Computer> getComputerPage(Page page, String orderBy, String dir) {
+		return computerDAO.getComputerPage(page, orderBy, dir);
 	}
 	
 	public List<Computer> getComputerResearch(String research, String order, String dir, Page page){

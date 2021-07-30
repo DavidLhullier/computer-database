@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import logger.CDBLogger;
 import model.Computer;
 import model.Computer.ComputerBuilder;
 import model.Page;
@@ -23,13 +24,13 @@ public class ComputerDAO {
 	private ComputerMapper computerMapper;
 	private final String REQUEST_COUNT_ALL = "SELECT COUNT(*) FROM computer ; ";
 	private final String REQUEST_COUNT_COMPUTER_WITH_SEARCH = "SELECT COUNT(*) FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id WHERE cp.name LIKE ? OR  cny.name LIKE ? ; ";
-	private final String REQUEST_GET_COMPUTER_PAGE = "SELECT cp.id, cp.name, cp.introduced, cp.discontinued, cp.company_id, cny.name as company_name FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id LIMIT ? OFFSET ? ;";
+	private final String REQUEST_GET_COMPUTER_PAGE = "SELECT cp.id, cp.name, cp.introduced, cp.discontinued, cp.company_id, cny.name as company_name FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id ";
 	private final String REQUEST_GET_ALL_COMPUTER = "SELECT cp.id, cp.name, cp.introduced, cp.discontinued, cp.company_id, cny.name as company_name FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id ;";
 	private final String REQUEST_GET_ONE_COMPUTER_BY_ID = "SELECT cp.id, cp.name, cp.introduced, cp.discontinued, cp.company_id, cny.name as company_name FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id WHERE cp.id = ? ;";
 	private final String REQUEST_ADD_COMPUTER = "INSERT INTO computer(name, introduced, discontinued, company_id) VALUES (?, ?, ?, ?);";
 	private final String REQUEST_DELETE_ONE_COMPUTER_BY_ID = "DELETE FROM computer WHERE id = ? ;";
 	private final String REQUEST_EDIT_ONE_COMPUTER_BY_ID = "UPDATE computer SET name = ?, introduced = ?, discontinued = ? , company_id = ? WHERE id = ?;";
-	private final String REQUEST_GET_ALL_COMPUTER_WITH_RESEARCH_AND_ORDER_BY ="SELECT cp.id, cp.name, cp.introduced, cp.discontinued, cp.company_id, cny.name as company_name FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id WHERE cp.name LIKE ? OR  cny.name LIKE ? ORDER BY ? ? LIMIT ? OFFSET ? ;";
+	private final String REQUEST_GET_ALL_COMPUTER_WITH_RESEARCH_AND_ORDER_BY ="SELECT cp.id, cp.name, cp.introduced, cp.discontinued, cp.company_id, cny.name as company_name FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id WHERE cp.name LIKE ? OR  cny.name LIKE ? ORDER BY ";
 	private final String END_REQUEST_SEARCH_COMPUTER = " LIMIT ? OFFSET ? ;";
 
 	//SELECT cp.id, cp.name, cp.introduced, cp.discontinued, cp.company_id, cny.name as company_name FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id WHERE cp.id = 4;
@@ -70,7 +71,6 @@ public class ComputerDAO {
 			if(computer.get().getName() != null) {
 				request.setString(1, computer.get().getName());
 			}
-			fa fa-fw  fa-angle-up  fa-
 			if(computer.get().getIntroduced() != null) {
 				request.setDate(2, Date.valueOf(computer.get().getIntroduced()) );
 			}else {
@@ -202,12 +202,11 @@ public class ComputerDAO {
 		return nbComputer;
 	}
 
-	public List<Computer> getComputerPage(Page page) {
+	public List<Computer> getComputerPage(Page page ,String orderBy, String dir) {
 		List<Computer> listComputer = new ArrayList<>();
 
 		try(Connection cn = JDBC.getInstance().getConnection();){
-			PreparedStatement request = cn.prepareStatement(REQUEST_GET_COMPUTER_PAGE);
-
+			PreparedStatement request = cn.prepareStatement(REQUEST_GET_COMPUTER_PAGE + "ORDER BY " + orderBy + " "+ dir + END_REQUEST_SEARCH_COMPUTER);
 			request.setInt(1, page.getNbElementByPage());
 			request.setInt(2, page.getNbElementByPage()*(page.getNumeroPage()-1) );
 
@@ -227,8 +226,8 @@ public class ComputerDAO {
 		List<Computer> listComputer = new ArrayList<>();
 		
 		try( Connection cn = JDBC.getInstance().getConnection(); ){
-			
-			PreparedStatement request = cn.prepareStatement(REQUEST_GET_ALL_COMPUTER_WITH_RESEARCH_AND_ORDER_BY);
+			PreparedStatement request = cn.prepareStatement(REQUEST_GET_ALL_COMPUTER_WITH_RESEARCH_AND_ORDER_BY +
+					order + " " + dir + END_REQUEST_SEARCH_COMPUTER);
 			if(research == null || research.isEmpty()) {
 				request.setString(1, "");
 				request.setString(2, "");
@@ -237,38 +236,11 @@ public class ComputerDAO {
 				request.setString(2, "%"+research+"%");
 			}
 			
-			if(order == null || order.isEmpty() ) {
-				request.setString(3, "cp.id");
-				request.setString(4, "ASC");
-			}else {
-				request.setString(3, "cp.name");
-				request.setString(4, "ASC");
-			}
-			request.setInt(5, page.getNbElementByPage());
-			request.setInt(6, page.getNbElementByPage()*(page.getNumeroPage()-1) );
+			request.setInt(3, page.getNbElementByPage());
+			request.setInt(4, page.getNbElementByPage()*(page.getNumeroPage()-1) );
 			
 			ResultSet rs = request.executeQuery();
-			/*
-			 * String midRequest = "";
-			if(order == null || order.isEmpty() ) {
-				midRequest = midRequest + " cp.id ";
-				midRequest = midRequest + " ASC ";
-			}else {
-				midRequest = midRequest +" "+ order +" ";
-				midRequest = midRequest +" "+ dir +" ";
-			}
 			
-			
-			PreparedStatement endRequest = cn.prepareStatement(END_REQUEST_SEARCH_COMPUTER);
-			 
-			endRequest.setInt(1, page.getNbElementByPage());
-			endRequest.setInt(2, page.getNbElementByPage()*(page.getNumeroPage()-1) );
-			
-			String finalRequest = String.valueOf(request)+ midRequest + endRequest.toString();
-			System.out.println(finalRequest);
-			PreparedStatement ps = cn.prepareStatement(finalRequest);
-			ResultSet rs = ps.executeQuery();
-			 */
 			while(rs.next()) {
 				listComputer.add(this.computerMapper.mapToComputer(rs));
 			}
