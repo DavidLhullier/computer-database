@@ -146,33 +146,26 @@ public class ComputerDAO {
 			else {
 				request.setString(1, computer.get().getName());
 			}
+			
 			if(computer.get().getIntroduced() == null) {
-				if(computerDB.getIntroduced() != null) {
-					request.setDate(2, Date.valueOf(computerDB.getIntroduced()) );	
-				} else {
-					request.setNull(2, java.sql.Types.NULL);
-				}
+				request.setNull(2, java.sql.Types.NULL);
+				
 			}
 			else {
 				request.setDate(2, Date.valueOf(computer.get().getIntroduced()) );
 			}
 
 			if(computer.get().getDiscontinued() == null) {
-				if(computerDB.getDiscontinued() != null) {
-					request.setDate(3, Date.valueOf(computerDB.getDiscontinued()) );	
-				} else {
-					request.setNull(3, java.sql.Types.NULL);
-				}
+				request.setNull(3, java.sql.Types.NULL);
+				
 			}
 			else {
 				request.setDate(3, Date.valueOf(computer.get().getDiscontinued()) );
 			}
+			
 			if(computer.get().getCompany().getId() == 0) {
-				if(computerDB.getCompany() != null) {
-					request.setInt(4, computerDB.getCompany().getId());
-				} else {
-					request.setNull(4, java.sql.Types.NULL);
-				}
+				request.setNull(4, java.sql.Types.NULL);
+				
 			}
 			else {
 				request.setInt(4, computer.get().getCompany().getId());		

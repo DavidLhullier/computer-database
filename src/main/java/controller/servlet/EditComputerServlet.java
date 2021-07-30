@@ -52,7 +52,7 @@ public class EditComputerServlet extends HttpServlet {
 
 		int id = Integer.parseInt(request.getParameter("id"));
 		Computer computer = computerService.getComputer(id);
-		CDBLogger.logInfo(EditComputerServlet.class.toString(), computer.toString());
+		CDBLogger.logInfo(EditComputerServlet.class.toString(), "Before modifications " + computer.toString());
 
 		request.setAttribute("computerId", computer.getId());
 		request.setAttribute("computerName", computer.getName());
@@ -88,7 +88,7 @@ public class EditComputerServlet extends HttpServlet {
 
 		try {
 			Optional<Computer> computer = this.computerBindingMapper.mapToComputer(computerDTO);
-			CDBLogger.logInfo(EditComputerServlet.class.toString(), computer.toString());
+			CDBLogger.logInfo(EditComputerServlet.class.toString(), "Before modifications " + computer.toString());
 			this.computerService.editComputerById(id, computer);
 
 		} catch(Exception e) {e.printStackTrace();
