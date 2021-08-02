@@ -14,12 +14,12 @@ public class CLImain {
 		
 		// TRANSACTION DELETE COMPANY AND COMPUTER EN CLI
 		/*
-		 * //AFFICHER TOUTES LES COMPANY ANVANT TRANSACTION
+		//AFFICHER TOUTES LES COMPANY ANVANT TRANSACTION
 		CompanyController companyController = new CompanyController().getInstance();
 		List<Company> listCompany =  companyController.getAllCompany();
 		listCompany.stream().forEach(c -> System.out.println(c));
 		
-		int id = 8;
+		int id = 9;
 		companyController.deleteCompanyById(id);
 		//AFFICHER TOUTES LES COMPANY APRES TRANSACTION
 		List<Company> listCompany1 =  companyController.getAllCompany();

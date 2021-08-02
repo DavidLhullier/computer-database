@@ -79,19 +79,12 @@ public class CompanyDAO {
 
 	public void deleteCompanyById(int id) {
 		try(Connection con = DataSource.getConnection();) {
-			PreparedStatement requestStart = con.prepareStatement(
-            		"SET FOREIGN_KEY_CHECKS=0;" ); 
-			requestStart.execute();
+			
 			
 			try( PreparedStatement request = con.prepareStatement(
 		            		REQUEST_START_TRANSACTION ); ){
 				request.execute();
 
-				
-				PreparedStatement deleteComapnyRequest = con.prepareStatement(
-	            		REQUEST_DELETE_ONE_COMPANY_BY_ID ); 
-				deleteComapnyRequest.setInt(1, id);
-				deleteComapnyRequest.executeUpdate();
 				
 				PreparedStatement deleteComputerRequest = con.prepareStatement(
 	            		REQUEST_DELETE_COMPUTER_BY_COMPANY_ID ); 
@@ -99,12 +92,15 @@ public class CompanyDAO {
 				deleteComputerRequest.executeUpdate();
 				
 				
+				PreparedStatement deleteComapnyRequest = con.prepareStatement(
+	            		REQUEST_DELETE_ONE_COMPANY_BY_ID ); 
+				deleteComapnyRequest.setInt(1, id);
+				deleteComapnyRequest.executeUpdate();
+				
 				
 				PreparedStatement commitRequest = con.prepareStatement(REQUEST_COMMIT);
 				commitRequest.execute();
-				PreparedStatement requestEND = con.prepareStatement(
-	            		"SET FOREIGN_KEY_CHECKS=1;" ); 
-				requestEND.execute();
+				
 				CDBLogger.logInfo(ComputerDAO.class.toString(), "Company and Computer delete");
 
 			} catch (SQLException e) {
@@ -112,9 +108,7 @@ public class CompanyDAO {
 				PreparedStatement rollbackRequest = con.prepareStatement(REQUEST_ROLLBACK);
 				rollbackRequest.execute();
 				CDBLogger.logInfo(ComputerDAO.class.toString(), "Company and Computer not delete");
-				PreparedStatement requestEND = con.prepareStatement(
-	            		"SET FOREIGN_KEY_CHECKS=1;" ); 
-				requestEND.execute();
+				
 			}
 		} catch(SQLException e) {
 			e.printStackTrace();
