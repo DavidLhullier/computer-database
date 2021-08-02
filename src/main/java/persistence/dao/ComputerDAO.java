@@ -26,6 +26,9 @@ public class ComputerDAO {
 	private final String REQUEST_GET_ONE_COMPUTER_BY_ID = "SELECT cp.id, cp.name, cp.introduced, cp.discontinued, cp.company_id, cny.name as company_name FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id WHERE cp.id = ? ;";
 	private final String REQUEST_ADD_COMPUTER = "INSERT INTO computer(name, introduced, discontinued, company_id) VALUES (?, ?, ?, ?);";
 	private final String REQUEST_DELETE_ONE_COMPUTER_BY_ID = "DELETE FROM computer WHERE id = ? ;";
+	private final String REQUEST_DELETE_COMPUTER_BY_COMPANY_ID = "DELETE FROM computer WHERE company_id = ? ;";
+	
+	
 	private final String REQUEST_EDIT_ONE_COMPUTER_BY_ID = "UPDATE computer SET name = ?, introduced = ?, discontinued = ? , company_id = ? WHERE id = ?;";
 	private final String REQUEST_GET_ALL_COMPUTER_WITH_RESEARCH_AND_ORDER_BY ="SELECT cp.id, cp.name, cp.introduced, cp.discontinued, cp.company_id, cny.name as company_name FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id WHERE cp.name LIKE ? OR  cny.name LIKE ? ORDER BY ";
 	private final String END_REQUEST_SEARCH_COMPUTER = " LIMIT ? OFFSET ? ;";
@@ -115,6 +118,21 @@ public class ComputerDAO {
 
 		try( Connection con = DataSource.getConnection();
 	            PreparedStatement request = con.prepareStatement( REQUEST_DELETE_ONE_COMPUTER_BY_ID ); ){
+
+			request.setInt(1, id);
+			request.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	public void deleteComputerByCompanyId(int id) {
+
+
+		try( Connection con = DataSource.getConnection();
+	            PreparedStatement request = con.prepareStatement( REQUEST_DELETE_COMPUTER_BY_COMPANY_ID ); ){
 
 			request.setInt(1, id);
 			request.executeUpdate();

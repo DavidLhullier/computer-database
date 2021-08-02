@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import logger.CDBLogger;
 import model.Company;
 import persistence.DataSource;
 import persistence.binding.mapper.CompanyMapper;
@@ -18,8 +19,14 @@ public class CompanyDAO {
 	private CompanyMapper companyMapper;
 	private final String REQUEST_GET_ALL_COMPANY = "SELECT id, name FROM company;";
 	private final String REQUEST_GET_ONE_COMPANY_BY_ID = "SELECT id, name FROM company WHERE id = ? ;";
-
-
+	
+	private final String REQUEST_START_TRANSACTION = "START TRANSACTION ;";
+	private final String REQUEST_ROLLBACK = "ROLLBACK;";
+	private final String REQUEST_COMMIT = "COMMIT;";
+	
+	private final String REQUEST_DELETE_ONE_COMPANY_BY_ID = "DELETE FROM company WHERE id = ? ;";
+	private final String REQUEST_DELETE_COMPUTER_BY_COMPANY_ID = "DELETE FROM computer WHERE company_id = ? ;";
+	
 	public CompanyDAO() {
 		this.companyMapper = new CompanyMapper();
 	}
@@ -67,6 +74,54 @@ public class CompanyDAO {
 		}
 
 		return company;
+	}
+
+
+	public void deleteCompanyById(int id) {
+		try(Connection con = DataSource.getConnection();) {
+			PreparedStatement requestStart = con.prepareStatement(
+            		"SET FOREIGN_KEY_CHECKS=0;" ); 
+			requestStart.execute();
+			
+			try( PreparedStatement request = con.prepareStatement(
+		            		REQUEST_START_TRANSACTION ); ){
+				request.execute();
+
+				
+				PreparedStatement deleteComapnyRequest = con.prepareStatement(
+	            		REQUEST_DELETE_ONE_COMPANY_BY_ID ); 
+				deleteComapnyRequest.setInt(1, id);
+				deleteComapnyRequest.executeUpdate();
+				
+				PreparedStatement deleteComputerRequest = con.prepareStatement(
+	            		REQUEST_DELETE_COMPUTER_BY_COMPANY_ID ); 
+				deleteComputerRequest.setInt(1, id);
+				deleteComputerRequest.executeUpdate();
+				
+				
+				
+				PreparedStatement commitRequest = con.prepareStatement(REQUEST_COMMIT);
+				commitRequest.execute();
+				PreparedStatement requestEND = con.prepareStatement(
+	            		"SET FOREIGN_KEY_CHECKS=1;" ); 
+				requestEND.execute();
+				CDBLogger.logInfo(ComputerDAO.class.toString(), "Company and Computer delete");
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+				PreparedStatement rollbackRequest = con.prepareStatement(REQUEST_ROLLBACK);
+				rollbackRequest.execute();
+				CDBLogger.logInfo(ComputerDAO.class.toString(), "Company and Computer not delete");
+				PreparedStatement requestEND = con.prepareStatement(
+	            		"SET FOREIGN_KEY_CHECKS=1;" ); 
+				requestEND.execute();
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+
+		
 	}
 
 
