@@ -3,6 +3,10 @@ package controller.binding.mapper;
 import java.sql.Date;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
 import controller.binding.dto.ComputerAddDTO;
 import controller.binding.dto.ValidationDTO;
 import logger.CDBLogger;
@@ -10,9 +14,12 @@ import model.Company;
 import model.Computer;
 import model.Computer.ComputerBuilder;
 
+@Component("computerDTOMapper")
 public class ComputerDTOMapper {
 
-	private ValidationDTO vDTO = ValidationDTO.getInstance();
+	@Autowired
+	@Qualifier("validationDTO")
+	private ValidationDTO vDTO;
 
 	public Optional <Computer> mapToComputer(ComputerAddDTO computerDTO) {		
 		try {

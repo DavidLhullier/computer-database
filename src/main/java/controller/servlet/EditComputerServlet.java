@@ -10,6 +10,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.stereotype.Controller;
+
+import configuration.RootConfiguration;
 import controller.binding.dto.ComputerAddDTO;
 import controller.binding.dto.ComputerAddDTO.ComputerDTOBuilder;
 import controller.binding.mapper.ComputerDTOMapper;
@@ -22,25 +28,34 @@ import service.ComputerService;
 /**
  * Servlet implementation class EditComputerServlet
  */
+
 @WebServlet("/EditComputerServlet")
 public class EditComputerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private CompanyService companyService;
+	
+	@Autowired
+    private CompanyService companyService ;
+	@Autowired
+	private ComputerDTOMapper computerDTOMapper;
+	@Autowired
 	private ComputerService computerService;
-	private ComputerDTOMapper computerBindingMapper;
 
 	private static final String VUE_DASHBOARD = "/computer-database/DashboardServlet";
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public EditComputerServlet() {
-		this.companyService = CompanyService.getInstance();
-		this.computerService = ComputerService.getInstance();
-		this.computerBindingMapper = new ComputerDTOMapper();
-		// TODO Auto-generated constructor stub
+	@Override
+	public void init() {
+		try {
+			super.init();
+			ApplicationContext context = new AnnotationConfigApplicationContext(RootConfiguration.class);
+			computerService = context.getBean(ComputerService.class);
+			companyService = context.getBean(CompanyService.class);
+			computerDTOMapper = context.getBean(ComputerDTOMapper.class);
+			
+		} catch(ServletException e) {
+			CDBLogger.logInfo(e.toString());
+		}
 	}
-
+	
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -87,7 +102,7 @@ public class EditComputerServlet extends HttpServlet {
 		computerDTO = computerAdd.build();
 
 		try {
-			Optional<Computer> computer = this.computerBindingMapper.mapToComputer(computerDTO);
+			Optional<Computer> computer = this.computerDTOMapper.mapToComputer(computerDTO);
 			CDBLogger.logInfo(EditComputerServlet.class.toString(), "Before modifications " + computer.toString());
 			this.computerService.editComputerById(id, computer);
 

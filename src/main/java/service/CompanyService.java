@@ -2,25 +2,18 @@ package service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import model.Company;
 import persistence.dao.CompanyDAO;
 
+@Service
 public class CompanyService {
 
-	private static CompanyService instance;
+	@Autowired
 	private CompanyDAO companyDAO;
 
-	//Singleton
-	public static  CompanyService getInstance() {
-		if(instance == null) {
-			instance = new CompanyService();
-		}
-		return instance;
-	}
-
-	public CompanyService() {
-		this.companyDAO = new CompanyDAO();
-	}
 
 	public List<Company> getAllCompany() {
 		return companyDAO.getAllCompany();

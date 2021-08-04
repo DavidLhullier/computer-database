@@ -4,10 +4,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
+import org.springframework.stereotype.Component;
+
 import model.Company;
 import model.Computer;
 import model.Computer.ComputerBuilder;
 
+@Component("computerMapperDAO")
 public class ComputerMapper {
 
 	public Computer mapToComputer(ResultSet rs) {

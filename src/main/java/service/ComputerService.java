@@ -3,27 +3,19 @@ package service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import model.Computer;
 import model.Page;
 import persistence.dao.ComputerDAO;
 
+@Service
 public class ComputerService {
 
-	private static ComputerService instance;
+	@Autowired
 	private ComputerDAO computerDAO;
 
-	//Singleton
-	public static  ComputerService getInstance() {
-		if(instance == null) {
-			instance = new ComputerService();
-		}
-		return instance;
-	}
-
-	public ComputerService() {
-		this.computerDAO = ComputerDAO.getInstance();
-	}
 
 	public List<Computer> getAllComputer() {
 		return computerDAO.getAllComputer();

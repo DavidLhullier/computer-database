@@ -10,15 +10,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
+
 import model.Computer;
 import model.Page;
 import persistence.DataSource;
 import persistence.binding.mapper.ComputerMapper;
 
+@Repository
 public class ComputerDAO {
 
-	private static ComputerDAO instance;
-	private ComputerMapper computerMapper;
 	private final String REQUEST_COUNT_ALL = "SELECT COUNT(*) FROM computer ; ";
 	private final String REQUEST_COUNT_COMPUTER_WITH_SEARCH = "SELECT COUNT(*) FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id WHERE cp.name LIKE ? OR  cny.name LIKE ? ; ";
 	private final String REQUEST_GET_COMPUTER_PAGE = "SELECT cp.id, cp.name, cp.introduced, cp.discontinued, cp.company_id, cny.name as company_name FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id ";
@@ -35,18 +38,9 @@ public class ComputerDAO {
 
 	//SELECT cp.id, cp.name, cp.introduced, cp.discontinued, cp.company_id, cny.name as company_name FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id WHERE cp.id = 4;
 
-	public ComputerDAO() {
-		this.computerMapper = new ComputerMapper();
-	}
-
-	//Singleton
-	public static  ComputerDAO getInstance() {
-		if(instance == null) {
-			instance = new ComputerDAO();
-		}
-		return instance;
-	}
-
+	@Autowired
+	@Qualifier("computerMapperDAO")
+	private ComputerMapper computerMapper;
 
 	public List<Computer> getAllComputer() {
 		List<Computer> listComputer = new ArrayList<>();

@@ -2,11 +2,16 @@ package ui;
 
 import java.util.List;
 
-import controller.CompanyController;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import configuration.RootConfiguration;
 import controller.ComputerController;
-import model.Company;
+import model.Computer;
 
 public class CLImain {
+	
+	private static ApplicationContext context;
 
 	public static void main(String[] args) {
 		//CDBLogger.logInfo(CLImain.class.toString(), new Exception()) ;
@@ -29,11 +34,9 @@ public class CLImain {
 		
 		
 		//AFFICHER TOUS LES ORDIS EN CLI
-		
-		new ComputerController();
-		//ComputerController computerController = ComputerController.getInstance();
-		//List<Computer> listComputer = computerController.getAllComputer();
-		//listComputer.stream().forEach(c -> System.out.println(c));
+		context = new AnnotationConfigApplicationContext(RootConfiguration.class);
+		List<Computer> listComputer = context.getBean(ComputerController.class).getAllComputer();
+		listComputer.stream().forEach(c -> System.out.println(c));
 		
 		
 		/*

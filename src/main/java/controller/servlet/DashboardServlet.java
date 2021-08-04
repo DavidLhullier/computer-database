@@ -10,18 +10,30 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import configuration.RootConfiguration;
 import logger.CDBLogger;
 import model.Computer;
 import model.Page;
 import service.ComputerService;
 
+
 /**
  * Servlet implementation class DashboardServlet
  */
+
 @WebServlet("/DashboardServlet")
 public class DashboardServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
+	
+	@Autowired
 	private ComputerService computerService;
+	
+	
 	private Page page = new Page();
 	private static final String VUE_DASHBOARD = "/computer-database/DashboardServlet";
 	private final String ASCENDING = "ASC";
@@ -35,17 +47,22 @@ public class DashboardServlet extends HttpServlet {
 	private String lemotquejechere ="";
 	private String orderBy = "cp.id";
 	private String dir = "ASC";
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public DashboardServlet() {
-		super();
-		this.computerService = ComputerService.getInstance();
+	
+	
+
+	@Override
+	public void init() {
+		try {
+			super.init();
+			ApplicationContext context = new AnnotationConfigApplicationContext(RootConfiguration.class);
+			computerService = context.getBean(ComputerService.class);
+			
+		} catch(ServletException e) {
+			CDBLogger.logInfo(e.toString());
+		}
 	}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		this.setInitialisation(request);
 		this.updatePage(request);
@@ -88,6 +105,7 @@ public class DashboardServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		List<String> selection = Arrays.asList(request.getParameter("selection").split(","));

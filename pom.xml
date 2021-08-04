@@ -30,8 +30,7 @@
 		<tomcat.version>9.0.46</tomcat.version>
 		<hikariCP.version>3.4.5</hikariCP.version>
 		<slf4j.version>1.7.30</slf4j.version>
-
-
+		<spring.version>5.3.9</spring.version>
 		
 
 	</properties>
@@ -129,9 +128,21 @@
 			<artifactId>slf4j-simple</artifactId>
 			<version>${slf4j.version}</version>
 		</dependency>
-
+		
+		<!-- Spring repository -->
+		<dependency>
+    		<groupId>org.springframework</groupId>
+   			 <artifactId>spring-core</artifactId>
+   			 <version>${spring.version}</version>   			 
+		</dependency>
+		
+		<dependency>
+    		<groupId>org.springframework</groupId>
+    		<artifactId>spring-context</artifactId>
+    		<version>${spring.version}</version>
+		</dependency>
+	
 	</dependencies>
-
 
 	<build>
 		<resources>

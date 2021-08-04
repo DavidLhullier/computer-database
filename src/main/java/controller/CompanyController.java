@@ -2,25 +2,17 @@ package controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+
 import model.Company;
 import service.CompanyService;
 
+@Controller
 public class CompanyController {
 
-	private static CompanyController instance;
+	@Autowired
 	private CompanyService companyService;
-	
-	//Singleton
-	public static  CompanyController getInstance() {
-		if(instance == null) {
-			instance = new CompanyController();
-		}
-		return instance;
-	}
-
-	public CompanyController() {
-		this.companyService = new CompanyService();
-	}
 	
 	public List<Company> getAllCompany() {
 		return companyService.getAllCompany();

@@ -2,11 +2,15 @@ package persistence;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+
+import org.springframework.stereotype.Component;
+
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 import logger.CDBLogger;
 
+@Component
 public class DataSource {
 
     private static HikariConfig config = new HikariConfig();
@@ -31,11 +35,6 @@ public class DataSource {
         config.addDataSourceProperty( "prepStmtCacheSqlLimit" , "2048" );
         ds = new HikariDataSource( config );
     }
-
-    private DataSource() {}
-    
-    
-    
 
     public static Connection getConnection() throws SQLException {
     	CDBLogger.logInfo(DataSource.class.toString(), "HikariCP connection") ;

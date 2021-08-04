@@ -8,15 +8,18 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
+
 import logger.CDBLogger;
 import model.Company;
 import persistence.DataSource;
 import persistence.binding.mapper.CompanyMapper;
 
+@Repository
 public class CompanyDAO {
 
-	private static CompanyDAO instance;
-	private CompanyMapper companyMapper;
 	private final String REQUEST_GET_ALL_COMPANY = "SELECT id, name FROM company;";
 	private final String REQUEST_GET_ONE_COMPANY_BY_ID = "SELECT id, name FROM company WHERE id = ? ;";
 	
@@ -27,18 +30,11 @@ public class CompanyDAO {
 	private final String REQUEST_DELETE_ONE_COMPANY_BY_ID = "DELETE FROM company WHERE id = ? ;";
 	private final String REQUEST_DELETE_COMPUTER_BY_COMPANY_ID = "DELETE FROM computer WHERE company_id = ? ;";
 	
-	public CompanyDAO() {
-		this.companyMapper = new CompanyMapper();
-	}
-
-
-	//Singleton
-	public static  CompanyDAO getInstance() {
-		if(instance == null) {
-			instance = new CompanyDAO();
-		}
-		return instance;
-	}
+	
+	@Autowired
+	@Qualifier("companyMapperDAO") //dans le cas où j'ai un autre mapper dao
+	private CompanyMapper companyMapper;
+	
 
 
 	public List<Company> getAllCompany() {

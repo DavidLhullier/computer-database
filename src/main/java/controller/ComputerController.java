@@ -2,25 +2,18 @@ package controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+
 import model.Computer;
 import service.ComputerService;
 
+@Controller
 public class ComputerController {
 
-	private static ComputerController instance;
+	@Autowired
 	private ComputerService computerService;
 
-
-	//Singleton
-	public static  ComputerController getInstance() {
-		if(instance == null) {
-			instance = new ComputerController();
-		}
-		return instance;
-	}
-	public ComputerController() {
-		this.computerService = new ComputerService().getInstance();
-	}
 
 	public List<Computer> getAllComputer(){
 		return computerService.getAllComputer();

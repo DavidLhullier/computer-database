@@ -2,20 +2,10 @@ package controller.binding.dto;
 
 import java.time.LocalDate;
 
+import org.springframework.stereotype.Component;
+
+@Component("validationDTO")
 public class ValidationDTO {
-
-	private static ValidationDTO instance;
-
-	//Singleton
-	public static  ValidationDTO getInstance() {
-		if(instance == null) {
-			instance = new ValidationDTO();
-		}
-		return instance;
-	}
-
-	private ValidationDTO() {
-	}
 
 	public void valide(ComputerAddDTO computerDTO) throws Exception {
 		valideName(computerDTO);
