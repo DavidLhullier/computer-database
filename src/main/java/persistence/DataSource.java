@@ -3,14 +3,15 @@ package persistence;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 import logger.CDBLogger;
 
-@Component
+@Configuration
+//@ComponentScan("persistence")
 public class DataSource {
 
     private static HikariConfig config = new HikariConfig();
@@ -20,14 +21,8 @@ public class DataSource {
 	private final static String PASSWORD = "qwerty1234";
 
     static {
-
-        try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        config.setJdbcUrl( URL );
+    	config.setDriverClassName("com.mysql.cj.jdbc.Driver");
+    	config.setJdbcUrl( URL );
         config.setUsername( LOGIN );
         config.setPassword( PASSWORD );
         config.addDataSourceProperty( "cachePrepStmts" , "true" );

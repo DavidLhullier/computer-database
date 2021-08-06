@@ -58,12 +58,6 @@ public class Computer {
 		private LocalDate introduced;
 		private LocalDate discontinued;
 		
-		
-		public ComputerBuilder setCompany(Company company) {
-			this.company = company;
-			return this;
-		}
-		
 		public ComputerBuilder setId(int id) {
 			this.id = id;
 			return this;
@@ -74,13 +68,18 @@ public class Computer {
 			return this;
 		}
 
-		public ComputerBuilder setIntroduced(LocalDate introduced) {
+		public ComputerBuilder withIntroduced(LocalDate introduced) {
 			this.introduced = introduced;
 			return this;
 		}
 
-		public ComputerBuilder setDiscontinued(LocalDate discontinued) {
+		public ComputerBuilder withDiscontinued(LocalDate discontinued) {
 			this.discontinued = discontinued;
+			return this;
+		}
+
+		public ComputerBuilder withCompany(Company company) {
+			this.company = company;
 			return this;
 		}
 		

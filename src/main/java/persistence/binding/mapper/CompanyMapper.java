@@ -8,21 +8,15 @@ import org.springframework.stereotype.Component;
 
 import model.Company;
 
-@Component("companyMapperDAO")
+@Component
 public class CompanyMapper {
 
-	public Company mapToCompany(ResultSet rs) {
-		Company company = new Company();
-		try {
-			company.setId(Integer.parseInt(rs.getString("id")));
-			company.setName(rs.getString("name"));
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return company;
+	private static final String COLONNE_ID = "id";
+	private static final String COLONNE_NAME = "name";
+	
+	public Company mapRow(ResultSet rs, int rowNum) throws SQLException {
+		return new Company(rs.getInt(COLONNE_ID) ,rs.getString(COLONNE_NAME));
 	}
 	
+
 }
