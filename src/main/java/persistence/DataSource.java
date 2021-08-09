@@ -10,8 +10,7 @@ import com.zaxxer.hikari.HikariDataSource;
 
 import logger.CDBLogger;
 
-@Configuration
-//@ComponentScan("persistence")
+
 public class DataSource {
 
     private static HikariConfig config = new HikariConfig();

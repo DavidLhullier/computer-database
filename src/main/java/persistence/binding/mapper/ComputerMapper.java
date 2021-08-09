@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import model.Company;
@@ -11,17 +12,17 @@ import model.Computer;
 import model.Computer.ComputerBuilder;
 
 @Component
-public class ComputerMapper {
+public class ComputerMapper implements RowMapper<Computer> {
 
 	private static final String ID = "id";
 	private static final String NAME = "name";
 	private static final String DATE_INTRODUCED = "introduced";
 	private static final String DATE_DISCONTINUED = "discontinued";
 	private static final String COMPANY_ID = "company_id";
-	private static final String COMPANY_NAME = "company.name";
+	private static final String COMPANY_NAME = "company_name";
 
 
-	public Computer mapRow(ResultSet rs) throws SQLException {
+	public Computer mapRow(ResultSet rs, int rowNum) throws SQLException {
 		ComputerBuilder computer = new ComputerBuilder();	
 		computer.setId(rs.getInt(ID));
 		computer.setName(rs.getString(NAME));

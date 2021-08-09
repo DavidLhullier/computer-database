@@ -11,12 +11,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import logger.CDBLogger;
-import model.Company;
 import model.Computer;
 import model.Page;
 import persistence.DataSource;
@@ -31,221 +31,127 @@ public class ComputerDAO {
 	private final String REQUEST_COUNT_COMPUTER_WITH_SEARCH = "SELECT COUNT(*) FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id WHERE cp.name LIKE ? OR  cny.name LIKE ? ; ";
 	private final String REQUEST_GET_COMPUTER_PAGE = "SELECT cp.id, cp.name, cp.introduced, cp.discontinued, cp.company_id, cny.name as company_name FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id ";
 	private final String REQUEST_GET_ALL_COMPUTER = "SELECT cp.id, cp.name, cp.introduced, cp.discontinued, cp.company_id, cny.name as company_name FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id ;";
-	private final String REQUEST_GET_ONE_COMPUTER_BY_ID = "SELECT cp.id, cp.name, cp.introduced, cp.discontinued, cp.company_id, cny.name as company_name FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id WHERE cp.id = ? ;";
+	private final String REQUEST_GET_ONE_COMPUTER_BY_ID = "SELECT cp.id, cp.name, cp.introduced, cp.discontinued, cp.company_id, cny.name as company_name FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id WHERE cp.id = :id ;";
 	private final String REQUEST_ADD_COMPUTER = "INSERT INTO computer(name, introduced, discontinued, company_id) VALUES (?, ?, ?, ?);";
-	private final String REQUEST_DELETE_ONE_COMPUTER_BY_ID = "DELETE FROM computer WHERE id = ? ;";
-	private final String REQUEST_DELETE_COMPUTER_BY_COMPANY_ID = "DELETE FROM computer WHERE company_id = ? ;";
+	private final String REQUEST_DELETE_ONE_COMPUTER_BY_ID = "DELETE FROM computer WHERE id = :id ;";
+	private final String REQUEST_DELETE_COMPUTER_BY_COMPANY_ID = "DELETE FROM computer WHERE company_id = :companyId ;";
 
 
-	private final String REQUEST_EDIT_ONE_COMPUTER_BY_ID = "UPDATE computer SET name = ?, introduced = ?, discontinued = ? , company_id = ? WHERE id = ?;";
+	private final String REQUEST_EDIT_ONE_COMPUTER_BY_ID = "UPDATE computer SET name = ? , introduced = ? , discontinued = ? , company_id = ? WHERE id = ? ;";
 	private final String REQUEST_GET_ALL_COMPUTER_WITH_RESEARCH_AND_ORDER_BY ="SELECT cp.id, cp.name, cp.introduced, cp.discontinued, cp.company_id, cny.name as company_name FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id WHERE cp.name LIKE ? OR  cny.name LIKE ? ORDER BY ";
 	private final String END_REQUEST_SEARCH_COMPUTER = " LIMIT ? OFFSET ? ;";
 
 	//SELECT cp.id, cp.name, cp.introduced, cp.discontinued, cp.company_id, cny.name as company_name FROM computer as cp LEFT JOIN company as cny on cny.id= cp.company_id WHERE cp.id = 4;
 
+
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	private JdbcTemplate jdbcTemplate;
-
-	@Autowired
-	@Qualifier("computerMapperDAO")
 	private ComputerMapper computerMapper;
 
+	public ComputerDAO(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate,
+			ComputerMapper computerMapper) {
+		super();
+		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+		this.jdbcTemplate = jdbcTemplate;
+		this.computerMapper = computerMapper;
+	}
+
 	public List<Computer> getAllComputer() {
-		
-		JdbcTemplate jdbcTemplate = new JdbcTemplateDataSource.getConnection();
-
-		List<Company> listComuter = jdbcTemplate.query(REQUEST_GET_ALL_COMPUTER,computerMapper);
-
-		return listComputer;
+		return jdbcTemplate.query(REQUEST_GET_ALL_COMPUTER,computerMapper);
 	}
 
 	public void addComputer(Optional<Computer> computer) {
-		jdbcTemplate.update(REQUEST_ADD_COMPUTER, 
-				computer.get().getName(),
+		jdbcTemplate.update(REQUEST_ADD_COMPUTER, computer.get().getName(),
 				Date.valueOf(computer.get().getIntroduced()),
 				Date.valueOf(computer.get().getDiscontinued()),
 				computer.get().getCompany().getId());
-
-		ComputerDTOAdd computerAdd = this.computerMapper.mapToComputer(computer);
-		SqlParameterSource computerparams = new BeanPropertySqlParameterSource(computerAdd);
-		namedParameterJdbcTemplate.update(REQUEST_ADD_COMPUTER, computerparams);
-
-		try( Connection con = DataSource.getConnection();
-				PreparedStatement request = con.prepareStatement( REQUEST_ADD_COMPUTER );){
-
-			if(computer.get().getName() != null) {
-				request.setString(1, computer.get().getName());
-			}
-			if(computer.get().getIntroduced() != null) {
-				request.setDate(2, Date.valueOf(computer.get().getIntroduced()) );
-			}else {
-				request.setNull(2, Types.TIMESTAMP);
-			}
-			if(computer.get().getDiscontinued() != null) {
-				request.setDate(3, Date.valueOf(computer.get().getDiscontinued()) );
-			}else {
-
-				request.setNull(3, Types.TIMESTAMP);
-			}
-			if(computer.get().getCompany() != null && computer.get().getCompany().getId() != 0) {
-				request.setInt(4, computer.get().getCompany().getId());
-			}else {
-
-				request.setNull(4, Types.BIGINT);
-			}
-			request.executeUpdate();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
 	}
 
 	public Computer getComputerById(int id) {
-		JdbcTemplate jdbcTemplate = new JdbcTemplateDataSource.getConnection();
-		
-		MapSqlParameterSource request = new MapSqlParameterSource().addValue("id", id);
-		
-		Computer computer = jdbcTemplate.query(REQUEST_GET_ONE_COMPUTER_BY_ID,computerMapper);
-
-		return computer;
-		/*
-		Computer computer = new Computer();
-		try( Connection con = DataSource.getConnection();
-				PreparedStatement request = con.prepareStatement( REQUEST_GET_ONE_COMPUTER_BY_ID ); ){
-			request.setInt(1, id);
-			ResultSet rs = request.executeQuery();
-
-			rs.next();
-			computer = this.computerMapper.mapToComputer(rs);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return computer;*/
+		MapSqlParameterSource requestParameter = new MapSqlParameterSource().addValue("id", id);
+		return namedParameterJdbcTemplate.query(REQUEST_GET_ONE_COMPUTER_BY_ID, requestParameter, computerMapper).get(0);
 	}
 
 	public void deleteComputerById(int id) {
-		JdbcTemplate jdbcTemplate = new JdbcTemplateDataSource.getConnection();
-		
-		//jdbcTemplate.
-
-				
 		SqlParameterSource request = new MapSqlParameterSource().addValue("id", id);
-		
-		namedParameterJdbcTemplate.update(REQUEST_DELETE_ONE_COMPUTER_BY_ID, request);			
-		
-/*
-		try( Connection con = DataSource.getConnection();
-				PreparedStatement request = con.prepareStatement( REQUEST_DELETE_ONE_COMPUTER_BY_ID ); ){
-
-			request.setInt(1, id);
-			request.executeUpdate();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-*/
+		namedParameterJdbcTemplate.update(REQUEST_DELETE_ONE_COMPUTER_BY_ID, request);	
 	}
 
 	public void deleteComputerByCompanyId(int id) {
-		JdbcTemplate jdbcTemplate = new JdbcTemplateDataSource.getConnection();
-		
-		//jdbcTemplate.
-
-				
-		SqlParameterSource request = new MapSqlParameterSource().addValue("id", id);
-		
+		SqlParameterSource request = new MapSqlParameterSource().addValue("companyId", id);
 		namedParameterJdbcTemplate.update(REQUEST_DELETE_COMPUTER_BY_COMPANY_ID, request);			
-		
-/*
-		try( Connection con = DataSource.getConnection();
-				PreparedStatement request = con.prepareStatement( REQUEST_DELETE_COMPUTER_BY_COMPANY_ID ); ){
-
-			request.setInt(1, id);
-			request.executeUpdate();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-*/
 	}
 
 	public void editComputerById(int id, Optional<Computer> computer) {
 
-		JdbcTemplate jdbcTemplate = new JdbcTemplate.getDataSource();
+		MapSqlParameterSource parameterId = new MapSqlParameterSource().addValue("id", id);
+		Computer computerDB = namedParameterJdbcTemplate.query(REQUEST_GET_ONE_COMPUTER_BY_ID, parameterId, computerMapper).get(0);
 
-		List<Object >parameters = new ArrayList<Object>();
-
-		Computer computerDB = jdbcTemplate.query(REQUEST_GET_ONE_COMPUTER_BY_ID, new SqlParameterValue(Types.INTEGER, computer.get().getId()) ,computerMapper);
-
-		
+		Object[] parameters = new Object[5];
+		int[] type = {Types.VARCHAR, Types.DATE, Types.DATE, Types.INTEGER, Types.INTEGER };
 
 		if(computer.get().getName() == null) {
 			if(computerDB.getName() != null) {
-				parameters.add(new SqlParameterValue(Types.VARCHAR, computerDB.get().getName()));
+				parameters[0] = computerDB.getName();
 			}
 		}
 		else {
-			parameters.add(new SqlParameterValue(Types.VARCHAR, computer.get().getName()));
+			parameters[0]= computer.get().getName();
 		}
 
 		if(computer.get().getIntroduced() == null) {
-			parameters.add(new SqlParameterValue(Types.DATE, java.sql.Types.NULL));
+			parameters[1] = java.sql.Types.NULL;
 		}
 		else {
-			parameters.add(new SqlParameterValue(Types.DATE, Date.valueOf(computer.get().getIntroduced())));
+			parameters[1] = Date.valueOf(computer.get().getIntroduced());
 		}
 
 		if(computer.get().getDiscontinued() == null) {
-			parameters.add(new SqlParameterValue(Types.DATE, java.sql.Types.NULL));
-
+			parameters[2] = java.sql.Types.NULL;
 		}
 		else {
-			parameters.add(new SqlParameterValue(Types.DATE, Date.valueOf(computer.get().getDiscontinued())));
+			parameters[2] = Date.valueOf(computer.get().getDiscontinued());
 		}
 
 		if(computer.get().getCompany().getId() == 0) {
-			parameters.add(new SqlParameterValue(Types.INTEGER, java.sql.Types.NULL));
+			parameters[3] = java.sql.Types.NULL;
 
 		}
 		else {
-			parameters.add(new SqlParameterValue(Types.INTEGER, computer.get().getCompany().getId()));
+			parameters[3] =computer.get().getCompany().getId();
 		}
-		parameters.add(new SqlParameterValue(Types.INTEGER, computer.get().getId()));
+		parameters[4] = id;
 
-		jdbcTemplate.update(REQUEST_EDIT_ONE_COMPUTER_BY_ID, parameters);
+		jdbcTemplate.update(REQUEST_EDIT_ONE_COMPUTER_BY_ID, parameters, type);
 
 	}
 
 	public int countAllComputer() {
-		NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(DataSource.getConnection());
+		JdbcTemplate jdbcTemplate = new JdbcTemplate();
+		NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
 
 		MapSqlParameterSource vParams = new MapSqlParameterSource();
 
 		int nbComputer = 0;
-		try {
-			nbComputer = vJdbcTemplate.queryForObject(REQUEST_COUNT_ALL, vParams, Integer.class);
-		} catch (SQLException e) {
-			CDBLogger.logInfo(e.toString());
-		}
+		nbComputer = vJdbcTemplate.queryForObject(REQUEST_COUNT_ALL, vParams, Integer.class);
 		return nbComputer;
 	}
 
 	public List<Computer> getComputerPage(Page page ,String orderBy, String dir) {
-		JdbcTemplate jdbcTemplate = new JdbcTemplateDataSource.getConnection();
-		
+		JdbcTemplate jdbcTemplate = new JdbcTemplate();
+
 		//jdbcTemplate.
 		Object[] parameters = {
-				 new MapSqlParameterSource().addValue("nbElementBypage",  page.getNbElementByPage()),
-				 new MapSqlParameterSource().addValue("nbElementBypage",  page.getNbElementByPage())
-				
+				new MapSqlParameterSource().addValue("nbElementBypage",  page.getNbElementByPage()),
+				new MapSqlParameterSource().addValue("nbElementBypage",  page.getNbElementByPage())
+
 		};
-		
-		List<Computer> listComputer = jdbcTemplate.query(REQUEST_GET_COMPUTER_PAGE + "ORDER BY " + orderBy + " "+ dir + END_REQUEST_SEARCH_COMPUTER , parameters);			
-		
+
+		//List<Computer> listComputer = jdbcTemplate.query(REQUEST_GET_COMPUTER_PAGE + "ORDER BY " + orderBy + " "+ dir + END_REQUEST_SEARCH_COMPUTER , parameters);			
+
+		List<Computer> listComputer = null; //a enlever pas pitié
 		return listComputer;
-		
+
 		/*
 		List<Computer> listComputer = new ArrayList<>();
 
@@ -264,11 +170,11 @@ public class ComputerDAO {
 		}
 		return listComputer;*/
 	}
-	
+
 	public List<Computer> getComputerResearch(String research, String order, String dir, Page page) {
-		
-		
-		
+
+
+
 		List<Computer> listComputer = new ArrayList<>();
 
 		try( Connection con = DataSource.getConnection();
@@ -298,7 +204,7 @@ public class ComputerDAO {
 	}
 
 	public int countAllComputerWithSearch(String research) {
-		
+
 		int nbComputer = 0;
 		try( Connection con = DataSource.getConnection();
 				PreparedStatement request = con.prepareStatement( REQUEST_COUNT_COMPUTER_WITH_SEARCH ); ){
