@@ -102,13 +102,18 @@ public class CLImain {
 		*/
 		
 		
-		int id = 643;
+		/*int id = 643;
 		//DELETE COMPUTER EN CLI
 		context = new AnnotationConfigApplicationContext(RootConfiguration.class);
 		context.getBean(ComputerController.class).deleteComputerById(id);
 		List<Computer> listComputer = context.getBean(ComputerController.class).getAllComputer();
 		listComputer.stream().forEach(c -> System.out.println(c));
-
+		*/
+		
+		//COUNT ALL
+		//context = new AnnotationConfigApplicationContext(RootConfiguration.class);
+		//System.out.println(context.getBean(ComputerService.class).countAllComputer());
+		
 		
 		
 		

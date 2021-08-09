@@ -53,66 +53,11 @@ public class CompanyDAO {
 	}
 
 	@Transactional(rollbackFor = { Exception.class })
-	public void deleteCompanyById(int id) {
-		
-	
-		JdbcTemplate jdbcTemplate = new JdbcTemplate();
-		
-
-		/*
-		 PreparedStatement request = con.prepareStatement(
-					REQUEST_START_TRANSACTION );
-				request.execute();
-				
+	public void deleteCompanyById(int id) {	
 		SqlParameterSource request = new MapSqlParameterSource().addValue("id", id);
 		
 		namedParameterJdbcTemplate.update(REQUEST_DELETE_COMPUTER_BY_COMPANY_ID, request);			
 		namedParameterJdbcTemplate.update(REQUEST_DELETE_ONE_COMPANY_BY_ID, request);
-		
-
-		PreparedStatement commitRequest = con.prepareStatement(REQUEST_COMMIT);
-		commitRequest.execute();
-		*/
-		
-		/*
-		try(Connection con = DataSource.getConnection();) {
-
-
-			try( PreparedStatement request = con.prepareStatement(
-					REQUEST_START_TRANSACTION ); ){
-				request.execute();
-
-
-				PreparedStatement deleteComputerRequest = con.prepareStatement(
-						REQUEST_DELETE_COMPUTER_BY_COMPANY_ID ); 
-				deleteComputerRequest.setInt(1, id);
-				deleteComputerRequest.executeUpdate();
-
-
-				PreparedStatement deleteComapnyRequest = con.prepareStatement(
-						REQUEST_DELETE_ONE_COMPANY_BY_ID ); 
-				deleteComapnyRequest.setInt(1, id);
-				deleteComapnyRequest.executeUpdate();
-
-
-				PreparedStatement commitRequest = con.prepareStatement(REQUEST_COMMIT);
-				commitRequest.execute();
-
-				CDBLogger.logInfo(ComputerDAO.class.toString(), "Company and Computer delete");
-
-			} catch (SQLException e) {
-				e.printStackTrace();
-				PreparedStatement rollbackRequest = con.prepareStatement(REQUEST_ROLLBACK);
-				rollbackRequest.execute();
-				CDBLogger.logInfo(ComputerDAO.class.toString(), "Company and Computer not delete");
-
-			}
-		} catch(SQLException e) {
-			e.printStackTrace();
-		}
-*/
-
-
 	}
 
 

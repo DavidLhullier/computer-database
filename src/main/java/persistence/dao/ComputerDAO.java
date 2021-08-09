@@ -127,103 +127,55 @@ public class ComputerDAO {
 	}
 
 	public int countAllComputer() {
-		JdbcTemplate jdbcTemplate = new JdbcTemplate();
-		NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
-
-		MapSqlParameterSource vParams = new MapSqlParameterSource();
-
-		int nbComputer = 0;
-		nbComputer = vJdbcTemplate.queryForObject(REQUEST_COUNT_ALL, vParams, Integer.class);
-		return nbComputer;
+		return jdbcTemplate.queryForObject(REQUEST_COUNT_ALL, Integer.class);
 	}
 
 	public List<Computer> getComputerPage(Page page ,String orderBy, String dir) {
-		JdbcTemplate jdbcTemplate = new JdbcTemplate();
-
-		//jdbcTemplate.
+		int[] type = {Types.INTEGER, Types.INTEGER };
 		Object[] parameters = {
-				new MapSqlParameterSource().addValue("nbElementBypage",  page.getNbElementByPage()),
-				new MapSqlParameterSource().addValue("nbElementBypage",  page.getNbElementByPage())
-
+				page.getNbElementByPage(),
+				page.getNbElementByPage()*(page.getNumeroPage()-1)
 		};
 
-		//List<Computer> listComputer = jdbcTemplate.query(REQUEST_GET_COMPUTER_PAGE + "ORDER BY " + orderBy + " "+ dir + END_REQUEST_SEARCH_COMPUTER , parameters);			
-
-		List<Computer> listComputer = null; //a enlever pas pitié
-		return listComputer;
-
-		/*
-		List<Computer> listComputer = new ArrayList<>();
-
-		try(Connection con = DataSource.getConnection();
-				PreparedStatement request = con.prepareStatement( REQUEST_GET_COMPUTER_PAGE + "ORDER BY " + orderBy + " "+ dir + END_REQUEST_SEARCH_COMPUTER );){
-			request.setInt(1, page.getNbElementByPage());
-			request.setInt(2, page.getNbElementByPage()*(page.getNumeroPage()-1) );
-
-			ResultSet rs = request.executeQuery();
-			while(rs.next()) {
-				listComputer.add(this.computerMapper.mapToComputer(rs));
-			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return listComputer;*/
+		return jdbcTemplate.query(REQUEST_GET_COMPUTER_PAGE 
+				+ "ORDER BY " + orderBy + " "+ dir + END_REQUEST_SEARCH_COMPUTER,
+				parameters, type, computerMapper);
 	}
 
 	public List<Computer> getComputerResearch(String research, String order, String dir, Page page) {
+		Object[] parameters = new Object[4];
+		int[] type = {Types.VARCHAR, Types.VARCHAR, Types.INTEGER, Types.INTEGER };
 
-
-
-		List<Computer> listComputer = new ArrayList<>();
-
-		try( Connection con = DataSource.getConnection();
-				PreparedStatement request = con.prepareStatement( REQUEST_GET_ALL_COMPUTER_WITH_RESEARCH_AND_ORDER_BY +
-						order + " " + dir + END_REQUEST_SEARCH_COMPUTER); ){
-			if(research == null || research.isEmpty()) {
-				request.setString(1, "");
-				request.setString(2, "");
-			} else {
-				request.setString(1, "%"+research+"%");
-				request.setString(2, "%"+research+"%");
-			}
-
-			request.setInt(3, page.getNbElementByPage());
-			request.setInt(4, page.getNbElementByPage()*(page.getNumeroPage()-1) );
-
-			ResultSet rs = request.executeQuery();
-
-			while(rs.next()) {
-				listComputer.add(this.computerMapper.mapToComputer(rs));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+		if(research == null || research.isEmpty()) {
+			parameters[0] = " ";
+			parameters[1] = " ";
+		} else {
+			parameters[0] = "%"+research+"%" ;
+			parameters[1] = "%"+research+"%" ;
 		}
-		//finalrequest + order + endfinal requets
-		return listComputer;
+		parameters[2] = page.getNbElementByPage();
+		parameters[3] = page.getNbElementByPage()*(page.getNumeroPage()-1);
+		
+		
+		return jdbcTemplate.query(REQUEST_GET_ALL_COMPUTER_WITH_RESEARCH_AND_ORDER_BY +
+				 order + " " + dir + END_REQUEST_SEARCH_COMPUTER,
+				 parameters, type, computerMapper);
 	}
 
 	public int countAllComputerWithSearch(String research) {
+		Object[] parameters = new Object[2];
+		int[] type = {Types.VARCHAR, Types.VARCHAR };
 
-		int nbComputer = 0;
-		try( Connection con = DataSource.getConnection();
-				PreparedStatement request = con.prepareStatement( REQUEST_COUNT_COMPUTER_WITH_SEARCH ); ){
-			if(research == null || research.isEmpty()) {
-				request.setString(1, "");
-				request.setString(2, "");
-			} else {
-				request.setString(1, "%"+research+"%");
-				request.setString(2, "%"+research+"%");
-			}
-			ResultSet rs = request.executeQuery();
-
-			rs.next();
-			nbComputer = rs.getInt(1);
-		} catch (SQLException e) {
-			e.printStackTrace();
+		if(research == null || research.isEmpty()) {
+			parameters[0] = " ";
+			parameters[1] = " ";
+		} else {
+			parameters[0] = "%"+research+"%" ;
+			parameters[1] = "%"+research+"%" ;
 		}
-
-		return nbComputer;
+		
+		return jdbcTemplate.queryForObject(REQUEST_COUNT_COMPUTER_WITH_SEARCH,
+				 parameters, type, Integer.class);
 	}
 
 

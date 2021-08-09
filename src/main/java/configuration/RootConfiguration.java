@@ -30,7 +30,9 @@ public class RootConfiguration {
 
 	@Bean
 	public HikariDataSource getDataSource() {
-		return new HikariDataSource(new HikariConfig(PROP_FILE_NAME));
+		HikariConfig config = new HikariConfig(PROP_FILE_NAME);
+		config.setDriverClassName("com.mysql.cj.jdbc.Driver");
+		return new HikariDataSource(config);
 	}
 
 	@Bean
