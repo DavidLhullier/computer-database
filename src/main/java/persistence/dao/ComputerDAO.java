@@ -83,8 +83,7 @@ public class ComputerDAO {
 		Computer computerDB = namedParameterJdbcTemplate.query(REQUEST_GET_ONE_COMPUTER_BY_ID, parameterId, computerMapper).get(0);
 
 		Object[] parameters = new Object[5];
-		int[] type = {Types.VARCHAR, Types.DATE, Types.DATE, Types.INTEGER, Types.INTEGER };
-
+		
 		if(computer.get().getName() == null) {
 			if(computerDB.getName() != null) {
 				parameters[0] = computerDB.getName();
@@ -95,21 +94,21 @@ public class ComputerDAO {
 		}
 
 		if(computer.get().getIntroduced() == null) {
-			parameters[1] = java.sql.Types.NULL;
+			parameters[1] = null;
 		}
 		else {
 			parameters[1] = Date.valueOf(computer.get().getIntroduced());
 		}
 
 		if(computer.get().getDiscontinued() == null) {
-			parameters[2] = java.sql.Types.NULL;
+			parameters[2] = null;
 		}
 		else {
 			parameters[2] = Date.valueOf(computer.get().getDiscontinued());
 		}
 
 		if(computer.get().getCompany().getId() == 0) {
-			parameters[3] = java.sql.Types.NULL;
+			parameters[3] = null;
 
 		}
 		else {
@@ -117,7 +116,7 @@ public class ComputerDAO {
 		}
 		parameters[4] = id;
 		
-		jdbcTemplate.update(REQUEST_EDIT_ONE_COMPUTER_BY_ID, parameters, type);
+		jdbcTemplate.update(REQUEST_EDIT_ONE_COMPUTER_BY_ID, parameters);
 
 	}
 

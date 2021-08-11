@@ -41,6 +41,7 @@
 					</form>
 					
 				</div>
+				
 				<div class="pull-right">
 					<a class="btn btn-success" id="addComputer" 
 						href="/computer-database/AddComputerServlet">Add Computer</a> 

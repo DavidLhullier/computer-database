@@ -41,7 +41,7 @@ public class AddComputerServlet {
 	
 	@GetMapping(value = "/AddComputerServlet")
 	protected ModelAndView displayComputer() {
-		System.out.println("displayAdd");
+
 		ModelAndView mv = new ModelAndView(VUE_ADD_COMPUTER);
 		mv.addObject("listCompany", this.getAllCompany());
 		
@@ -61,7 +61,7 @@ public class AddComputerServlet {
 	
 	@PostMapping(value = "/AddComputerServlet")
 	protected ModelAndView addComputer(ComputerAddDTO computerAddDTO) {
-		System.out.println("adding");
+		CDBLogger.logInfo("adding");
 		ModelAndView mv = new ModelAndView(VUE_DASHBOARD);
 	
 		try {

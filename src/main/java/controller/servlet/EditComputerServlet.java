@@ -2,12 +2,10 @@ package controller.servlet;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -31,29 +29,20 @@ public class EditComputerServlet {
 	@Autowired
 	private ComputerService computerService;
 	
-
 	private ComputerAddDTO computerDTO;
 	
 	private static final String VUE_DASHBOARD = "/dashboard";
-
 	private static final String VUE_EDIT_COMPUTER = "/editComputer";
 
 	
-
-	@GetMapping(value = "/EditComputerServlet", params = "id")
-	protected ModelAndView displayComputer(@RequestParam("id") int id ) {
+	//@RequestMapping(value = "/EditComputerServlet", method = RequestMethod.GET)
+	@GetMapping(value = "/EditComputerServlet")
+	protected ModelAndView displayComputer(int id) {
 
 		ModelAndView mv = new ModelAndView(VUE_EDIT_COMPUTER);
-		mv.addObject("listCompany", this.companyService.getAllCompany());
+		mv.addObject("listCompany", this.getAllCompany());
 		mv.addObject("computer", this.computerService.getComputer(id) );
-		/*
-		if (!"".equals(this.computerDTO.getCompanyId())) {
-			mv.addObject("companyName",
-					this.getAllCompany().stream()
-							.filter(c -> String.valueOf(c.getId()).equals(computerDTO.getCompanyId()))
-							.collect(Collectors.toList())
-							.get(0).getName());
-		}*/
+		CDBLogger.logInfo("Update : "+this.computerService.getComputer(id));
 				
 		return mv;
 	}
@@ -62,22 +51,21 @@ public class EditComputerServlet {
 		return this.companyService.getAllCompany();
 	}
 	
-	@PostMapping(value = "/editComputer", params = "id" )
-	protected ModelAndView editComputer(
-			@ModelAttribute("computer") ComputerAddDTO computerAddDTO,
-			@RequestParam("id") int id ) {
-		
-		ModelAndView mv = new ModelAndView(VUE_EDIT_COMPUTER);
+	//@RequestMapping(value = "/EditComputerServlet", method = RequestMethod.POST )
+	@PostMapping(value = "/EditComputerServlet" )
+	protected String editComputer(@RequestParam("id") int id, ComputerAddDTO computerAddDTO) {
+		CDBLogger.logInfo("udpating");
 		try {
-			Optional<Computer> computer = this.computerDTOMapper.mapToComputer(computerDTO);
-			CDBLogger.logInfo(AddComputerServlet.class.toString(),  "Before modifications " + computer.toString());
+			CDBLogger.logInfo(EditComputerServlet.class.toString(), computerAddDTO.toString());
+			Optional<Computer> computer = this.computerDTOMapper.mapToComputer(computerAddDTO);
+			CDBLogger.logInfo(EditComputerServlet.class.toString(),  "Before modifications " + computer.toString());
 			this.computerService.editComputerById(id, computer);
 			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 		
-		return mv;
+		return  "redirect:/Dashboard?page=1";
 	}
 	
 	/*

@@ -24,7 +24,7 @@
             <div class="row">
                 <div class="col-xs-8 col-xs-offset-2 box">
                     <h1>Add Computer</h1>
-                    <form action="/computer-database/Dashboard?page=1" 
+                    <form action="/computer-database/AddComputerServlet" 
                     	method="POST" >
                         <fieldset>
                             <div class="form-group">
