@@ -5,112 +5,123 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
-import configuration.RootConfiguration;
 import logger.CDBLogger;
 import model.Computer;
 import model.Page;
 import service.ComputerService;
 
 
-/**
- * Servlet implementation class DashboardServlet
- */
+@Controller
+public class DashboardServlet {
 
-@WebServlet("/DashboardServlet")
-public class DashboardServlet extends HttpServlet {
-	
-	private static final long serialVersionUID = 1L;
-	
 	@Autowired
 	private ComputerService computerService;
-	
-	
+
+
 	private Page page = new Page();
-	private static final String VUE_DASHBOARD = "/computer-database/DashboardServlet";
-	private final String ASCENDING = "ASC";
-	private final String DESCENDING = "DESC";
-	private final String ORDER_BY_COMPUTER_NAME ="cp.name";
-	private final String ORDER_BY_COMPANY_NAME ="cny.name";
-	private final String ORDER_BY_COMPUTER_ID ="cp.id";
-	private final String ORDER_BY_COMPUTER_INTRODUCED ="cp.introduced";
-	private final String ORDER_BY_COMPUTER_DISCONTINUED ="cp.discontinued";
-	private final String RESEARCH_EMPTY ="";
-	private String lemotquejechere ="";
+	private static final String VUE_DASHBOARD = "/dashboard";
+	private final String RESEARCH_EMPTY = "";
+	private final String COMPUTER_NAME = "cp.name";
+	private final String ASCENDANT = "ASC";
+	private String searchRequest = "";
 	private String orderBy = "cp.id";
 	private String dir = "ASC";
-	
-	
 
-	@Override
-	public void init() {
-		try {
-			super.init();
-			ApplicationContext context = new AnnotationConfigApplicationContext(RootConfiguration.class);
-			computerService = context.getBean(ComputerService.class);
-			
-		} catch(ServletException e) {
-			CDBLogger.logInfo(e.toString());
-		}
+
+	private List<Computer> getAllComputer() {
+		int nbComputer = this.computerService.countAllComputer();
+		this.page.setNbElementDB(nbComputer);
+		return computerService.getComputerPage(this.page, this.orderBy, this.dir);
 	}
 
-	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		this.setInitialisation(request);
-		this.updatePage(request);
-
-
-
-		String search = request.getParameter("search");
-		if(request.getParameter("orderBy") != null) {
-			List<String> orderByDir = Arrays.asList(request.getParameter("orderBy").split(","));
-			orderBy = orderByDir.get(0);
-			dir = orderByDir.get(1);
-			this.updateOrderBy(orderBy, dir);
-		}
-
-		if(search!=null ) {
-			lemotquejechere=search;
-			this.page.setNumeroPage(1);
-		}
-
-		if(!lemotquejechere.isEmpty()) {
-			search = lemotquejechere +","+ orderBy +","+ dir;
-			CDBLogger.logInfo(search);
-			List<String> research = Arrays.asList(search.split(","));
-			this.updateSearch(request, research);
-
-		} else {
-			int nbComputer = computerService.countAllComputer();
-			page.setNbElementDB(nbComputer);
-			List<Computer> listComputer = computerService.getComputerPage(page,orderBy,dir);
-			request.setAttribute("listComputer", listComputer);
-			request.setAttribute("nbComputer", nbComputer);
-		}
-
-
-
-		this.getServletContext().getRequestDispatcher("/WEB-INF/view/dashboard.jsp").forward(request, response);
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+	@RequestMapping(value = "/Dashboard", params = "page")
+	public ModelAndView updateNumPage(@RequestParam("page") int numPage) throws ServletException, IOException {
+		CDBLogger.logInfo("updateNumPage");
+		this.page.setNumeroPage(numPage);
+		return this.updateSearch(this.searchRequest);
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@RequestMapping(value = "/Dashboard", params = "nbElementByPage")
+	public ModelAndView updateNbElementByPage(@RequestParam("nbElementByPage") int nbElementByPage) throws ServletException, IOException {
+		CDBLogger.logInfo("updateNbElementByPage");
+		this.page.setNbElementByPage(nbElementByPage);
+		this.page.setNumeroPage(1);
+		return this.updateSearch(this.searchRequest);	}
 
-		List<String> selection = Arrays.asList(request.getParameter("selection").split(","));
+	@GetMapping(value = "/Dashboard", params = "search")
+	public ModelAndView updateSearch(@RequestParam("search") String search) throws ServletException, IOException {
+		ModelAndView mv = new ModelAndView(VUE_DASHBOARD);
+
 		try {
-			selection.stream()
+			this.searchRequest = search;
+			if(this.searchRequest.equals(RESEARCH_EMPTY)) {
+				CDBLogger.logInfo("no research");
+				mv.addObject("listComputer", this.getAllComputer());
+
+				this.page.setNbElementDB(this.getAllComputer().size());
+				mv.addObject("page", this.page );
+
+				this.getAllComputer().size();
+
+			}else {
+				CDBLogger.logInfo("updateSearch "+search);
+
+				this.page.setNbElementDB(this.computerService.
+						countAllComputerWithSearch(this.searchRequest));
+				
+				if(this.page.getNumeroPage() > this.page.getTotalPage()) {
+					this.page.setNumeroPage(1);
+					
+				} 
+				mv.addObject("listComputer", 
+						this.computerService.
+						getComputerResearch(this.searchRequest, 
+								this.orderBy, this.dir, this.page));
+				mv.addObject("page", this.page );
+
+			}
+		} catch ( Exception e) {
+			CDBLogger.logWarn(DashboardServlet.class.toString(), e);
+		}
+
+		return mv;
+
+	}
+
+	@GetMapping(value = "/Dashboard", params = "orderBy")
+	public ModelAndView updateOrderBy(@RequestParam("orderBy") String orderBy) throws ServletException, IOException {
+		CDBLogger.logInfo("updateOrderBy " + orderBy);
+		List<String> selection = Arrays.asList(orderBy.split(","));
+		this.orderBy = selection.get(0);
+		this.dir = selection.get(1);
+		this.page.setNumeroPage(1);
+		return this.updateSearch(this.searchRequest);	}
+
+	@GetMapping(value = "/reset")
+	public String reset() {
+		System.out.println("tfvygbhnjcdrytvfybguhextsrcdytvfbyg");
+		this.searchRequest = RESEARCH_EMPTY;
+		this.orderBy = COMPUTER_NAME;
+		this.dir = ASCENDANT ;
+		this.page.setNumeroPage(1);
+		return VUE_DASHBOARD;
+	}
+
+	@PostMapping(value = "/Dashboard", params = "selection")
+	public ModelAndView delete(@RequestParam("selection") String selection) throws ServletException, IOException {
+		CDBLogger.logInfo("delete init");
+		List<String> selectedId = Arrays.asList(selection.split(","));
+		try {
+			selectedId.stream()
 			.map(s -> Integer.valueOf(s) )
 			.forEach(id -> this.computerService.deleteComputerById(id) );
 		}catch (Exception e) {
@@ -118,91 +129,7 @@ public class DashboardServlet extends HttpServlet {
 			CDBLogger.logWarn(DashboardServlet.class.toString(), e);
 		}
 
-		response.sendRedirect(VUE_DASHBOARD);
+		return this.updateSearch(RESEARCH_EMPTY);	}
 
-	}
-
-
-	private void setInitialisation(HttpServletRequest request) {
-		request.setAttribute("page",page);
-
-		request.setAttribute("search", RESEARCH_EMPTY);
-		request.setAttribute("orderBy", ORDER_BY_COMPUTER_ID );
-
-	}
-
-	private void updatePage(HttpServletRequest request) {
-		String nbElement = request.getParameter("nbElementByPage");
-		String numPage = request.getParameter("page");
-		try {
-
-			if(numPage != null) {
-				this.page.setNumeroPage(Integer.valueOf(numPage));
-				if  (Integer.valueOf(numPage) <= page.getTotalPage() ) {
-					page.setNumeroPage(Integer.valueOf(numPage));
-				}
-			}
-
-			if(nbElement != null) {
-
-				this.page.setNbElementByPage(Integer.valueOf(nbElement));
-				this.page.setNumeroPage(1);
-			}
-
-
-		} catch (NullPointerException | NumberFormatException e) {
-			e.printStackTrace();
-			//CDBLogger.logInfo(DashboardServlet.class.toString(), e);
-		}
-		//CDBLogger.logInfo(this.page.toString());
-	}
-
-	private void updateSearch(HttpServletRequest request, List<String> searchRequest) {
-
-		try {
-
-			List<Computer> listComputer = this.computerService.getComputerResearch(searchRequest.get(0),searchRequest.get(1), searchRequest.get(2), page);
-			int nbComputer = computerService.countAllComputerWithSearch(searchRequest.get(0));
-			this.page.setNbElementDB(nbComputer);
-
-
-			request.setAttribute("listComputer", listComputer);
-			request.setAttribute("nbComputer", this.page.getNbElementDB());
-
-		} catch (Exception e) {
-			CDBLogger.logWarn(DashboardServlet.class.toString(), e);
-		}
-
-
-
-	}
-
-	private void updateOrderBy(String orderBy, String dir) {
-		if(orderBy != null) {
-			switch(orderBy) {
-			case "computer.name":
-				this.orderBy = ORDER_BY_COMPUTER_NAME;
-				break;
-			case "introduced":
-				this.orderBy = ORDER_BY_COMPUTER_INTRODUCED;
-				break;
-			case "discontinued":
-				this.orderBy = ORDER_BY_COMPUTER_DISCONTINUED;
-				break;
-			case "company.name":
-				this.orderBy = ORDER_BY_COMPANY_NAME;
-				break;
-			default :
-				this.orderBy = ORDER_BY_COMPUTER_ID;
-			}
-			if(dir.equals(ASCENDING)) {
-				this.dir = ASCENDING;
-			} else {
-				this.dir = DESCENDING;
-			} 		
-		}
-
-
-	}
 
 }

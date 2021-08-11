@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,7 +15,7 @@
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="/computer-database/DashboardServlet"> Application - Computer Database </a>
+            <a class="navbar-brand" href="/computer-database/Dashboard?page=1"> Application - Computer Database </a>
         </div>
     </header>
 
@@ -23,19 +24,23 @@
             <div class="row">
                 <div class="col-xs-8 col-xs-offset-2 box">
                     <h1>Add Computer</h1>
-                    <form action="/computer-database/AddComputerServlet" method="POST">
+                    <form action="/computer-database/Dashboard?page=1" 
+                    	method="POST" >
                         <fieldset>
                             <div class="form-group">
                                 <label for="computerName">Computer name</label>
-                                <input type="text" class="form-control" name="name" placeholder="Computer name">
+                                <input type="text" class="form-control" name="name" 
+                                placeholder="Computer name"  value=${ computer.name }>
                             </div>
                             <div class="form-group">
                                 <label for="introduced">Introduced date</label>
-                                <input type="date" class="form-control" name="introduced" placeholder="Introduced date">
+                                <input type="date" class="form-control" name="introduced" 
+                                placeholder="Introduced date"  value=${ computer.introduced }>
                             </div>
                             <div class="form-group">
                                 <label for="discontinued">Discontinued date</label>
-                                <input type="date" class="form-control" name="discontinued" placeholder="Discontinued date">
+                                <input type="date" class="form-control" name="discontinued" 
+                                placeholder="Discontinued date"  value=${ computer.discontinued }>
                             </div>
                             <div class="form-group">
                                 <label for="companyId">Company</label>
@@ -49,8 +54,9 @@
                         </fieldset>
                         <div class="actions pull-right">
                             <input type="submit" value="Add" class="btn btn-primary">
+                           
                             or
-                            <a href="/computer-database/DashboardServlet" class="btn btn-default">Cancel</a>
+                            <a href="/computer-database/Dashboard?page=1" class="btn btn-default">Cancel</a>
                         </div>
                     </form>
                 </div>

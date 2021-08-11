@@ -32,15 +32,15 @@ public class ComputerDTOMapper {
 		ComputerBuilder computerBuilder = new ComputerBuilder();
 		
 		computerBuilder.setName(computerDTO.getName()).
-				withCompany(new Company(Integer.valueOf(computerDTO.getCompanyId()), "tygui"));
+				withCompany(new Company(Integer.valueOf(computerDTO.getCompanyId()), ""));
 		 
 
 		
-		if( !computerDTO.getIntroduced().isEmpty() & computerDTO.getIntroduced() != null) {
+		if(computerDTO.getIntroduced() != null && !computerDTO.getIntroduced().equals("")) {
 			computerBuilder.withIntroduced(Date.valueOf(computerDTO.getIntroduced()).toLocalDate());
 		}
 
-		if( !computerDTO.getDiscontinued().isEmpty() & computerDTO.getDiscontinued() != null) {
+		if(computerDTO.getDiscontinued() != null && !computerDTO.getDiscontinued().equals("")) {
 			computerBuilder.withDiscontinued(Date.valueOf(computerDTO.getDiscontinued()).toLocalDate());
 		}
 

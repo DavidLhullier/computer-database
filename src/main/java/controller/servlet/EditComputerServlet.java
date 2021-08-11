@@ -1,23 +1,18 @@
 package controller.servlet;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
-import configuration.RootConfiguration;
 import controller.binding.dto.ComputerAddDTO;
-import controller.binding.dto.ComputerAddDTO.ComputerDTOBuilder;
 import controller.binding.mapper.ComputerDTOMapper;
 import logger.CDBLogger;
 import model.Company;
@@ -25,13 +20,9 @@ import model.Computer;
 import service.CompanyService;
 import service.ComputerService;
 
-/**
- * Servlet implementation class EditComputerServlet
- */
 
-@WebServlet("/EditComputerServlet")
-public class EditComputerServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+@Controller
+public class EditComputerServlet {
 	
 	@Autowired
     private CompanyService companyService ;
@@ -39,32 +30,60 @@ public class EditComputerServlet extends HttpServlet {
 	private ComputerDTOMapper computerDTOMapper;
 	@Autowired
 	private ComputerService computerService;
+	
 
-	private static final String VUE_DASHBOARD = "/computer-database/DashboardServlet";
+	private ComputerAddDTO computerDTO;
+	
+	private static final String VUE_DASHBOARD = "/dashboard";
 
-	@Override
-	public void init() {
-		try {
-			super.init();
-			ApplicationContext context = new AnnotationConfigApplicationContext(RootConfiguration.class);
-			computerService = context.getBean(ComputerService.class);
-			companyService = context.getBean(CompanyService.class);
-			computerDTOMapper = context.getBean(ComputerDTOMapper.class);
-			
-		} catch(ServletException e) {
-			CDBLogger.logInfo(e.toString());
-		}
+	private static final String VUE_EDIT_COMPUTER = "/editComputer";
+
+	
+
+	@GetMapping(value = "/EditComputerServlet", params = "id")
+	protected ModelAndView displayComputer(@RequestParam("id") int id ) {
+
+		ModelAndView mv = new ModelAndView(VUE_EDIT_COMPUTER);
+		mv.addObject("listCompany", this.companyService.getAllCompany());
+		mv.addObject("computer", this.computerService.getComputer(id) );
+		/*
+		if (!"".equals(this.computerDTO.getCompanyId())) {
+			mv.addObject("companyName",
+					this.getAllCompany().stream()
+							.filter(c -> String.valueOf(c.getId()).equals(computerDTO.getCompanyId()))
+							.collect(Collectors.toList())
+							.get(0).getName());
+		}*/
+				
+		return mv;
 	}
 	
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+	private List<Company> getAllCompany() {
+		return this.companyService.getAllCompany();
+	}
+	
+	@PostMapping(value = "/editComputer", params = "id" )
+	protected ModelAndView editComputer(
+			@ModelAttribute("computer") ComputerAddDTO computerAddDTO,
+			@RequestParam("id") int id ) {
+		
+		ModelAndView mv = new ModelAndView(VUE_EDIT_COMPUTER);
+		try {
+			Optional<Computer> computer = this.computerDTOMapper.mapToComputer(computerDTO);
+			CDBLogger.logInfo(AddComputerServlet.class.toString(),  "Before modifications " + computer.toString());
+			this.computerService.editComputerById(id, computer);
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return mv;
+	}
+	
+	/*
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		List<Company> listCompany = companyService.getAllCompany();
-
-		request.setAttribute("listCompany", listCompany);
-
+		
 		int id = Integer.parseInt(request.getParameter("id"));
 		Computer computer = computerService.getComputer(id);
 		CDBLogger.logInfo(EditComputerServlet.class.toString(), "Before modifications " + computer.toString());
@@ -77,11 +96,9 @@ public class EditComputerServlet extends HttpServlet {
 		
 		this.getServletContext().getRequestDispatcher("/WEB-INF/view/editComputer.jsp").forward(request, response);
 		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+	}*/
+	
+	/*
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int id = Integer.parseInt(request.getParameter("id"));
 		ComputerAddDTO computerDTO = new ComputerAddDTO();
@@ -111,6 +128,11 @@ public class EditComputerServlet extends HttpServlet {
 		}
 
 		response.sendRedirect(VUE_DASHBOARD); //ESSENTIEL
-	}
+	}*/
 
+	@GetMapping("/editComputer/cancel")
+	public String cancel () {
+		//insert error to log
+		return VUE_DASHBOARD;
+	}
 }

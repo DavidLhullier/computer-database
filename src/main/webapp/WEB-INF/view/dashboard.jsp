@@ -17,7 +17,7 @@
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
-			<a class="navbar-brand" href="/computer-database/DashboardServlet?search="> Application -
+			<a class="navbar-brand" href="/computer-database/Dashboard?search="> Application -
 				Computer Database </a>
 		</div>
 	</header>
@@ -42,7 +42,8 @@
 					
 				</div>
 				<div class="pull-right">
-					<a class="btn btn-success" id="addComputer" href="/computer-database/AddComputerServlet">Add Computer</a> 
+					<a class="btn btn-success" id="addComputer" 
+						href="/computer-database/AddComputerServlet">Add Computer</a> 
 						
 						<a class="btn btn-default" id="editComputer" 
 						href="#"
@@ -72,27 +73,27 @@
 							</span></th>
 							
 							<!-- ici on order by  -->
-						<th><a href="?orderBy=computer.name,ASC"> <i
+						<th><a href="?orderBy=cp.name,ASC"> <i
 								class="fa fa-fw  fa-angle-up  fa-clickable"></i>
-						</a> Computer name <a href="?orderBy=computer.name,DESC"> <i
+						</a> Computer name <a href="?orderBy=cp.name,DESC"> <i
 								class="fa fa-fw  fa-angle-down  fa-clickable"></i>
 						</a></th>
 
-						<th><a href="?orderBy=introduced,ASC"> <i
+						<th><a href="?orderBy=cp.introduced,ASC"> <i
 								class="fa fa-fw  fa-angle-up  fa-clickable"></i>
-						</a> Introduced date <a href="?orderBy=introduced,DESC"> <i
+						</a> Introduced date <a href="?orderBy=cp.introduced,DESC"> <i
 								class="fa fa-fw  fa-angle-down  fa-clickable"></i>
 						</a></th>
 						
-						<th><a href="?orderBy=discontinued,ASC"> 
+						<th><a href="?orderBy=cp.discontinued,ASC"> 
 						<i class="fa fa-fw  fa-angle-ud  fa-clickable"></i>
-						</a> Discontinued date <a href="?orderBy=discontinued,DESC"> <i
+						</a> Discontinued date <a href="?orderBy=cp.discontinued,DESC"> <i
 								class="fa fa-fw  fa-angle-down  fa-clickable"></i>
 						</a></th>
 
-						<th><a href="?orderBy=company.name,ASC"> <i
+						<th><a href="?orderBy=cny.name,ASC"> <i
 								class="fa fa-fw  fa-angle-up  fa-clickable"></i>
-						</a> Company <a href="?orderBy=company.name,DESC"> <i
+						</a> Company <a href="?orderBy=cny.name,DESC"> <i
 								class="fa fa-fw  fa-angle-down  fa-clickable"></i>
 						</a></th>
 
@@ -107,7 +108,8 @@
 								class="cb" value=${computer.id }>${computer.id }</td>
 							<td><a
 							href="
-							<c:url value="/EditComputerServlet"><c:param name="id" value="${ computer.id }"/></c:url>
+							<c:url value="/EditComputerServlet"><c:param 
+								name="id" value="${ computer.id }"/></c:url>
 							"
 							onclick=""> ${ computer.name }</a>
 							</td>
@@ -132,14 +134,16 @@
 				</li>
 				<c:if test="${page.numeroPage > 2}">
 					<li><a href="
-                      		<c:url value="/DashboardServlet"><c:param name="page" value="${page.numeroPage - 2}"/></c:url>
+                      		<c:url value="/Dashboard"><c:param 
+                      			name="page" value="${page.numeroPage - 2}"/></c:url>
                       	"> ${page.numeroPage - 2}
                  	</a>
                  </li>
                  </c:if>
                  <c:if test="${page.numeroPage > 1}">
 					<li><a href="
-                      		<c:url value="/DashboardServlet"><c:param name="page" value="${page.numeroPage - 1}"/></c:url>
+                      		<c:url value="/Dashboard"><c:param 
+                      			name="page" value="${page.numeroPage - 1}"/></c:url>
                       	"> ${page.numeroPage - 1}
                  	</a>
                  </li>
@@ -147,26 +151,32 @@
 				<li><a href="?page=${page.numeroPage }"   >${page.numeroPage}</a></li>
 				<c:if test="${page.numeroPage < page.totalPage}">
 					<li><a href="
-                   		<c:url value="/DashboardServlet"><c:param name="page" value="${page.numeroPage + 1}"/></c:url>
+                   		<c:url value="/Dashboard"><c:param 
+                   			name="page" value="${page.numeroPage + 1}"/></c:url>
                       	">${page.numeroPage + 1}
                  	</a>
                  	</li>
                  </c:if>
                  <c:if test="${page.numeroPage < page.totalPage - 1}">
 					<li><a href="
-                   		<c:url value="/DashboardServlet"><c:param name="page" value="${page.numeroPage + 2}"/></c:url>
+                   		<c:url value="/Dashboard"><c:param 
+                   			name="page" value="${page.numeroPage + 2}"/></c:url>
                       	">${page.numeroPage + 2}
                  	</a>
                  	</li>
                  </c:if>
-                 <li><a href="?page=${page.totalPage}" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+                 <li><a href="?page=${page.totalPage}" aria-label="Next"> 
+                 <span aria-hidden="true">&raquo;</span>
 				</a></li>
 			</ul>
 		<div class="btn-group btn-group-sm pull-right" role="group" >
 	         	<form id="nbElementByPage" action="#" method="GET">
-		        	<button type="submit" class="btn btn-default" name="nbElementByPage" value="10">10</button>
-		            <button type="submit" class="btn btn-default" name="nbElementByPage" value="50">50</button>
-		            <button type="submit" class="btn btn-default" name="nbElementByPage" value="100">100</button>
+		        	<button type="submit" class="btn btn-default"
+						name="nbElementByPage" value="10">10</button>
+		            <button type="submit" class="btn btn-default"
+		            	name="nbElementByPage" value="50">50</button>
+		            <button type="submit" class="btn btn-default" 
+		            	name="nbElementByPage" value="100">100</button>
 	            </form>
 	        </div>
 	</div>

@@ -1,28 +1,19 @@
 package persistence.dao;
 
-import java.sql.Connection;
 import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
-import logger.CDBLogger;
 import model.Computer;
 import model.Page;
-import persistence.DataSource;
 import persistence.binding.mapper.ComputerMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.SqlParameterValue;
 
 @Repository
 public class ComputerDAO {
@@ -61,10 +52,14 @@ public class ComputerDAO {
 	}
 
 	public void addComputer(Optional<Computer> computer) {
-		jdbcTemplate.update(REQUEST_ADD_COMPUTER, computer.get().getName(),
-				Date.valueOf(computer.get().getIntroduced()),
-				Date.valueOf(computer.get().getDiscontinued()),
-				computer.get().getCompany().getId());
+
+		Object[] parameters = correctionValues(computer);
+		System.out.println(parameters[0]);
+		System.out.println(parameters[1]);
+		System.out.println(parameters[2]);
+		System.out.println(parameters[3]);
+		jdbcTemplate.update(REQUEST_ADD_COMPUTER, parameters);
+
 	}
 
 	public Computer getComputerById(int id) {
@@ -121,7 +116,7 @@ public class ComputerDAO {
 			parameters[3] =computer.get().getCompany().getId();
 		}
 		parameters[4] = id;
-
+		
 		jdbcTemplate.update(REQUEST_EDIT_ONE_COMPUTER_BY_ID, parameters, type);
 
 	}
@@ -178,5 +173,32 @@ public class ComputerDAO {
 				 parameters, type, Integer.class);
 	}
 
+	private Object[] correctionValues(Optional<Computer> computer) {
+		Object[] parameters = new Object[4];
+		
+		parameters[0] = computer.get().getName();
 
+		if(computer.get().getIntroduced() == null) {
+			parameters[1] = null;
+		}
+		else {
+			parameters[1] = Date.valueOf(computer.get().getIntroduced());
+		}
+
+		if(computer.get().getDiscontinued() == null) {
+			parameters[2] = null;
+		}
+		else {
+			parameters[2] = Date.valueOf(computer.get().getDiscontinued());
+		}
+
+		if(computer.get().getCompany().getId() == 0) {
+			parameters[3] = null;
+
+		}
+		else {
+			parameters[3] =computer.get().getCompany().getId();
+		}
+		return parameters;
+	}
 }

@@ -1,17 +1,13 @@
 package persistence.dao;
 
-import java.sql.PreparedStatement;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.jdbc.core.RowMapper;
 
 import model.Company;
 import persistence.binding.mapper.CompanyMapper;
@@ -21,10 +17,6 @@ public class CompanyDAO {
 
 	private final String REQUEST_GET_ALL_COMPANY = "SELECT id, name FROM company;";
 	private final String REQUEST_GET_ONE_COMPANY_BY_ID = "SELECT id, name FROM company WHERE id = :id ;";
-
-	private final String REQUEST_START_TRANSACTION = "START TRANSACTION ;";
-	private final String REQUEST_ROLLBACK = "ROLLBACK;";
-	private final String REQUEST_COMMIT = "COMMIT;";
 
 	private final String REQUEST_DELETE_ONE_COMPANY_BY_ID = "DELETE FROM company WHERE id = ? ;";
 	private final String REQUEST_DELETE_COMPUTER_BY_COMPANY_ID = "DELETE FROM computer WHERE company_id = ? ;";

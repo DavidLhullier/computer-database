@@ -27,8 +27,25 @@ public class ComputerAddDTO {
 	public String getDiscontinued() {
 		return discontinued;
 	}
+	
 	public String getCompanyId() {
 		return companyId;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setIntroduced(String introduced) {
+		this.introduced = introduced;
+	}
+
+	public void setDiscontinued(String discontinued) {
+		this.discontinued = discontinued;
+	}
+
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
 	}
 	
 	@Override

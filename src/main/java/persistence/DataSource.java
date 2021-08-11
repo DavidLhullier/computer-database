@@ -3,8 +3,6 @@ package persistence;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.springframework.context.annotation.Configuration;
-
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 

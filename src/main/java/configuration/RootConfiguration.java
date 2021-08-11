@@ -17,10 +17,8 @@ import com.zaxxer.hikari.HikariDataSource;
 		"persistence.dao",
 		"persistence.binding.mapper",
 		"service",
-
 		"ui",
 		"controller",
-		"controller.servlet",
 		"controller.binding.mapper",
 		"controller.binding.dto"})
 
