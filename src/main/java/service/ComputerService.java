@@ -13,9 +13,12 @@ import persistence.dao.ComputerDAO;
 @Service
 public class ComputerService {
 
-	@Autowired
 	private ComputerDAO computerDAO;
 
+	@Autowired
+	public ComputerService(ComputerDAO computerDAO) {
+		this.computerDAO = computerDAO;
+	}
 
 	public List<Computer> getAllComputer() {
 		return computerDAO.getAllComputer();
@@ -31,12 +34,10 @@ public class ComputerService {
 
 	public void deleteComputerById(int id) {
 		computerDAO.deleteComputerById(id);
-
 	}
 
 	public void editComputerById(int id, Optional<Computer> computer) {
 		computerDAO.editComputerById(id, computer);
-
 	}
 
 	public int countAllComputer() {
@@ -53,5 +54,9 @@ public class ComputerService {
 
 	public int countAllComputerWithSearch(String search) {
 		return computerDAO.countAllComputerWithSearch(search);
+	}
+
+	public void deleteComputerByCompanyId(int id) {
+		this.computerDAO.deleteComputerByCompanyId(id);		
 	}
 }

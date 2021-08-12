@@ -2,6 +2,7 @@ package persistence.dao;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -25,16 +26,15 @@ public class CompanyDAO {
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	private JdbcTemplate jdbcTemplate;
 	private CompanyMapper companyMapper;
-
+	
+	@Autowired
 	public CompanyDAO(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate,
 			CompanyMapper companyMapper) {
-		super();
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 		this.jdbcTemplate = jdbcTemplate;
 		this.companyMapper = companyMapper;
 	}
 
-	//@Override
 	public List<Company> getAllCompany() {
 		return jdbcTemplate.query(REQUEST_GET_ALL_COMPANY, companyMapper);
 	}
@@ -44,13 +44,9 @@ public class CompanyDAO {
 		return namedParameterJdbcTemplate.query(REQUEST_GET_ONE_COMPANY_BY_ID, requestParameter, companyMapper).get(0);
 	}
 
-	@Transactional(rollbackFor = { Exception.class })
 	public void deleteCompanyById(int id) {	
-		SqlParameterSource request = new MapSqlParameterSource().addValue("id", id);
-		
-		namedParameterJdbcTemplate.update(REQUEST_DELETE_COMPUTER_BY_COMPANY_ID, request);			
+		SqlParameterSource request = new MapSqlParameterSource().addValue("id", id);		
 		namedParameterJdbcTemplate.update(REQUEST_DELETE_ONE_COMPANY_BY_ID, request);
 	}
-
 
 }

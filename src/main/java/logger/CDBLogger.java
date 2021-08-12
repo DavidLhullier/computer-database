@@ -12,7 +12,7 @@ public class CDBLogger {
 	
 	public static void logInfo(String name, Exception exception) {
 		Logger logger = LogManager.getLogger(name);
-		logger.info(exception.getClass() + " : " + exception.getMessage());
+		logger.info(exception);
 		//exception.printStackTrace();
 	}
 	

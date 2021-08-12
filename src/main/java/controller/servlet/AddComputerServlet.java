@@ -23,16 +23,22 @@ import service.ComputerService;
 @Controller
 public class AddComputerServlet {
 	
-	@Autowired
+
     private CompanyService companyService ;
-	@Autowired
 	private ComputerDTOMapper computerDTOMapper;
-	@Autowired
 	private ComputerService computerService;
+	
+	@Autowired
+	public AddComputerServlet(CompanyService companyService, ComputerDTOMapper computerDTOMapper,
+			ComputerService computerService) {
+		this.companyService = companyService;
+		this.computerDTOMapper = computerDTOMapper;
+		this.computerService = computerService;
+	}
 	
 	private ComputerAddDTO computerDTO;
 	
-	private static final String VUE_DASHBOARD = "/dashboard";
+	private static final String VUE_DASHBOARD = "redirect:/Dashboard?page=1";
 	private static final String VUE_ADD_COMPUTER = "/addComputer";
 
 	private Page page = new Page();
@@ -84,43 +90,5 @@ public class AddComputerServlet {
 		this.getAllComputer().size();
 		return mv;
 	}
-	/*
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ComputerAddDTO computerDTO = new ComputerAddDTO();
-		ComputerDTOBuilder computerAdd = new ComputerDTOBuilder();
-		
-		String computerName = request.getParameter("name");
-		computerAdd.setName(computerName);
-		
-		String computerIntroduced = request.getParameter("introduced");
-		computerAdd.setIntroduced(computerIntroduced);
-		
-		String computerDiscontinued = request.getParameter("discontinued");
-		computerAdd.setDiscontinued(computerDiscontinued);
-		
-		String computerCompany = request.getParameter("companyId");
-		computerAdd.setCompanyId(computerCompany);
-
-		computerDTO = computerAdd.build();
-		
-		try {
-			Optional<Computer> computer = this.computerDTOMapper.mapToComputer(computerDTO);
-			CDBLogger.logInfo(AddComputerServlet.class.toString(), computer.toString());
-			this.computerService.addComputer(computer);
-			
-		} catch(Exception e) {
-			
-		}
 	
-
-		response.sendRedirect(VUE_DASHBOARD); //ESSENTIEL
-	}*/
-	
-	@GetMapping("/addComputer/cancel")
-	public String cancel() {
-		//insert error to log
-		return VUE_DASHBOARD;
-	}
-
-
 }

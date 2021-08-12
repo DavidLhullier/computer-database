@@ -183,9 +183,10 @@
 	</div>
 	</footer>
 	
-	<script src="${pageContext.request.contextPath}/static/js/jquery.min.js"></script>
-	<script src="${pageContext.request.contextPath}/static/js/bootstrap.min.js"></script>
-	<script src="${pageContext.request.contextPath}/static/js/dashboard.js"></script>
+
+<script><%@include file="../../static/js/jquery.min.js"%></script>
+<script><%@include file="../../static/js/bootstrap.min.js"%></script>
+<script><%@include file="../../static/js/dashboard.js"%></script>
 
 </body>
 </html>

@@ -23,15 +23,18 @@ import service.ComputerService;
 @Controller
 public class DashboardServlet {
 
-	@Autowired
 	private ComputerService computerService;
-
+	
+	@Autowired
+	public DashboardServlet(ComputerService computerService) {
+		this.computerService = computerService;
+	}
 
 	private Page page = new Page();
 	private static final String VUE_DASHBOARD = "/dashboard";
-	private final String RESEARCH_EMPTY = "";
-	private final String COMPUTER_NAME = "cp.name";
-	private final String ASCENDANT = "ASC";
+	private static final String RESEARCH_EMPTY = "";
+	private static final String COMPUTER_NAME = "cp.name";
+	private static final String ASCENDANT = "ASC";
 	private String searchRequest = "";
 	private String orderBy = "cp.id";
 	private String dir = "ASC";
@@ -43,14 +46,14 @@ public class DashboardServlet {
 		return computerService.getComputerPage(this.page, this.orderBy, this.dir);
 	}
 
-	@RequestMapping(value = "/Dashboard", params = "page")
+	@GetMapping(value = "/Dashboard", params = "page")
 	public ModelAndView updateNumPage(@RequestParam("page") int numPage) throws ServletException, IOException {
 		CDBLogger.logInfo("updateNumPage");
 		this.page.setNumeroPage(numPage);
 		return this.updateSearch(this.searchRequest);
 	}
 
-	@RequestMapping(value = "/Dashboard", params = "nbElementByPage")
+	@GetMapping(value = "/Dashboard", params = "nbElementByPage")
 	public ModelAndView updateNbElementByPage(@RequestParam("nbElementByPage") int nbElementByPage) throws ServletException, IOException {
 		CDBLogger.logInfo("updateNbElementByPage");
 		this.page.setNbElementByPage(nbElementByPage);
@@ -116,8 +119,8 @@ public class DashboardServlet {
 		return VUE_DASHBOARD;
 	}
 
-	@PostMapping(value = "/Dashboard", params = "selection")
-	public ModelAndView delete(@RequestParam("selection") String selection) throws ServletException, IOException {
+	@PostMapping(value = "/Dashboard")
+	public ModelAndView delete(String selection) throws ServletException, IOException {
 		CDBLogger.logInfo("delete init");
 		List<String> selectedId = Arrays.asList(selection.split(","));
 		try {
@@ -129,6 +132,7 @@ public class DashboardServlet {
 			CDBLogger.logWarn(DashboardServlet.class.toString(), e);
 		}
 
+		this.page.setNumeroPage(1);
 		return this.updateSearch(RESEARCH_EMPTY);	}
 
 

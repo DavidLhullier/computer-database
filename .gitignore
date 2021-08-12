@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-
 # Created by https://www.toptal.com/developers/gitignore/api/maven,eclipse,java,java-web
 # Edit at https://www.toptal.com/developers/gitignore?templates=maven,eclipse,java,java-web
 
@@ -73,6 +71,8 @@ local.properties
 # Compiled class file
 *.class
 
+.properties
+
 # Log file
 *.log
 
@@ -112,6 +112,3 @@ buildNumber.properties
 
 # End of https://www.toptal.com/developers/gitignore/api/maven,eclipse,java,java-web
 
-=======
-/target/
->>>>>>> On est là frero
