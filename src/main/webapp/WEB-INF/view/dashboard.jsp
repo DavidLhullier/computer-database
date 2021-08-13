@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
-<title>Computer Database</title>
+<title><fmt:message key="label.title" /></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="utf-8">
 <!-- Bootstrap -->
@@ -17,15 +18,15 @@
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
-			<a class="navbar-brand" href="/computer-database/Dashboard?search="> Application -
-				Computer Database </a>
+			<a class="navbar-brand" href="/computer-database/Dashboard?search=">
+			<fmt:message key="label.home" /> </a>
 		</div>
 	</header>
 
 	<section id="main">
 		<div class="container">
 			<h1 id="homeTitle">
-				<c:out value="${page.nbElementDB }"/> Computers found</h1>
+				<c:out value="${page.nbElementDB }"/> <fmt:message key="label.computersFound" /></h1>
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
 					<form id="searchForm" action="#" method="GET" class="form-inline">
@@ -33,10 +34,10 @@
 				
 				<input type="search" id="searchbox" name="search"
 							class="form-control" 
-							placeholder="Search name" />
+							placeholder="<fmt:message key="label.searchName" />" />
 				<input
 							
-							type="submit" id="searchsubmit" value="Filter by name and company"
+							type="submit" id="searchsubmit" value="<fmt:message key="label.filter" />"
 							class="btn btn-primary" />
 					</form>
 					
@@ -44,11 +45,11 @@
 				
 				<div class="pull-right">
 					<a class="btn btn-success" id="addComputer" 
-						href="/computer-database/AddComputerServlet">Add Computer</a> 
+						href="/computer-database/AddComputerServlet"><fmt:message key="label.add" /></a> 
 						
 						<a class="btn btn-default" id="editComputer" 
 						href="#"
-						onclick="$.fn.toggleEditMode();">Edit</a>
+						onclick="$.fn.toggleEditMode();"><fmt:message key="label.edit" /></a>
 				</div>
 			</div>
 		</div>
@@ -76,25 +77,25 @@
 							<!-- ici on order by  -->
 						<th><a href="?orderBy=cp.name,ASC"> <i
 								class="fa fa-fw  fa-angle-up  fa-clickable"></i>
-						</a> Computer name <a href="?orderBy=cp.name,DESC"> <i
+						</a><fmt:message key="label.computerName" /><a href="?orderBy=cp.name,DESC"> <i
 								class="fa fa-fw  fa-angle-down  fa-clickable"></i>
 						</a></th>
 
 						<th><a href="?orderBy=cp.introduced,ASC"> <i
 								class="fa fa-fw  fa-angle-up  fa-clickable"></i>
-						</a> Introduced date <a href="?orderBy=cp.introduced,DESC"> <i
+						</a><fmt:message key="label.introducedDate" /><a href="?orderBy=cp.introduced,DESC"> <i
 								class="fa fa-fw  fa-angle-down  fa-clickable"></i>
 						</a></th>
 						
 						<th><a href="?orderBy=cp.discontinued,ASC"> 
 						<i class="fa fa-fw  fa-angle-ud  fa-clickable"></i>
-						</a> Discontinued date <a href="?orderBy=cp.discontinued,DESC"> <i
+						</a><fmt:message key="label.discontinuedDate" /><a href="?orderBy=cp.discontinued,DESC"> <i
 								class="fa fa-fw  fa-angle-down  fa-clickable"></i>
 						</a></th>
 
 						<th><a href="?orderBy=cny.name,ASC"> <i
 								class="fa fa-fw  fa-angle-up  fa-clickable"></i>
-						</a> Company <a href="?orderBy=cny.name,DESC"> <i
+						</a><fmt:message key="label.companyName" /><a href="?orderBy=cny.name,DESC"> <i
 								class="fa fa-fw  fa-angle-down  fa-clickable"></i>
 						</a></th>
 
@@ -127,12 +128,17 @@
 
 	<footer class="navbar-fixed-bottom">
 		<div class="container text-center">
-		 <ul class="pagination">
-				<li>
-					<a href="?page=1" aria-label="Previous"> 
-						<span aria-hidden="true">&laquo;</span>
-					</a>
-				</li>
+			<div class="btn-group btn-sm pull left" role="group">
+			
+			<a href="?lang=en"><fmt:message key="label.lang.en" /></a>
+			<a href="?lang=fr"><fmt:message key="label.lang.fr" /></a>
+			</div>
+				<ul class="pagination">
+				<li><a href="?page=1" aria-label="Previous">
+					<span aria-hidden="true">&laquo;</span>
+				</a></li>
+				
+								
 				<c:if test="${page.numeroPage > 2}">
 					<li><a href="
                       		<c:url value="/Dashboard"><c:param 

@@ -133,7 +133,15 @@ public class DashboardServlet {
 		}
 
 		this.page.setNumeroPage(1);
-		return this.updateSearch(RESEARCH_EMPTY);	}
+		return this.updateSearch(RESEARCH_EMPTY);	
+		}
 
 
+	@GetMapping(value = "/Dashboard", params = "lang")
+	public ModelAndView updateLang(@RequestParam("lang") String lang) throws ServletException, IOException {
+		CDBLogger.logInfo("updateLang");
+		this.updateSearch(this.searchRequest).addObject("language", lang);
+		System.out.println(lang);
+		return this.updateSearch(this.searchRequest);
+	}
 }
