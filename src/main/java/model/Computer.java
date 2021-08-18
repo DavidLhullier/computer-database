@@ -4,13 +4,12 @@ import java.time.LocalDate;
 
 public class Computer {
 
-	
-	private Company company;
 	private int id;
 	private String name;
 	private LocalDate introduced;
 	private LocalDate discontinued;
-	
+	private Company company;
+
 	public Computer(ComputerBuilder computerBuilder) {
 		this.id = computerBuilder.id;
 		this.name = computerBuilder.name;
@@ -34,7 +33,6 @@ public class Computer {
 	public String getName() {
 		return name;
 	}
-
 
 	public LocalDate getIntroduced() {
 		return introduced;
@@ -88,6 +86,5 @@ public class Computer {
 		}
 
 	}
-	
 	
 }

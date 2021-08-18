@@ -47,11 +47,8 @@ public class AddComputerServlet {
 	
 	@GetMapping(value = "/AddComputerServlet")
 	protected ModelAndView displayComputer() {
-
 		ModelAndView mv = new ModelAndView(VUE_ADD_COMPUTER);
 		mv.addObject("listCompany", this.getAllCompany());
-		
-		
 		return mv;
 	}
 	

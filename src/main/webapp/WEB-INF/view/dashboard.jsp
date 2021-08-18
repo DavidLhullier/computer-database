@@ -75,27 +75,27 @@
 							</span></th>
 							
 							<!-- ici on order by  -->
-						<th><a href="?orderBy=cp.name,ASC"> <i
+						<th><a href="?orderBy=cp.name,asc"> <i
 								class="fa fa-fw  fa-angle-up  fa-clickable"></i>
-						</a><fmt:message key="label.computerName" /><a href="?orderBy=cp.name,DESC"> <i
+						</a><fmt:message key="label.computerName" /><a href="?orderBy=cp.name,desc"> <i
 								class="fa fa-fw  fa-angle-down  fa-clickable"></i>
 						</a></th>
 
-						<th><a href="?orderBy=cp.introduced,ASC"> <i
+						<th><a href="?orderBy=cp.introduced,asc"> <i
 								class="fa fa-fw  fa-angle-up  fa-clickable"></i>
-						</a><fmt:message key="label.introducedDate" /><a href="?orderBy=cp.introduced,DESC"> <i
+						</a><fmt:message key="label.introducedDate" /><a href="?orderBy=cp.introduced,desc"> <i
 								class="fa fa-fw  fa-angle-down  fa-clickable"></i>
 						</a></th>
 						
-						<th><a href="?orderBy=cp.discontinued,ASC"> 
+						<th><a href="?orderBy=cp.discontinued,asc"> 
 						<i class="fa fa-fw  fa-angle-ud  fa-clickable"></i>
-						</a><fmt:message key="label.discontinuedDate" /><a href="?orderBy=cp.discontinued,DESC"> <i
+						</a><fmt:message key="label.discontinuedDate" /><a href="?orderBy=cp.discontinued,desc"> <i
 								class="fa fa-fw  fa-angle-down  fa-clickable"></i>
 						</a></th>
 
-						<th><a href="?orderBy=cny.name,ASC"> <i
+						<th><a href="?orderBy=cp.company.name,asc"> <i
 								class="fa fa-fw  fa-angle-up  fa-clickable"></i>
-						</a><fmt:message key="label.companyName" /><a href="?orderBy=cny.name,DESC"> <i
+						</a><fmt:message key="label.companyName" /><a href="?orderBy=cp.company.name,desc"> <i
 								class="fa fa-fw  fa-angle-down  fa-clickable"></i>
 						</a></th>
 

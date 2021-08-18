@@ -34,10 +34,10 @@ public class DashboardServlet {
 	private static final String VUE_DASHBOARD = "/dashboard";
 	private static final String RESEARCH_EMPTY = "";
 	private static final String COMPUTER_NAME = "cp.name";
-	private static final String ASCENDANT = "ASC";
+	private static final String ASCENDANT = "asc";
 	private String searchRequest = "";
 	private String orderBy = "cp.id";
-	private String dir = "ASC";
+	private String dir = "asc";
 
 
 	private List<Computer> getAllComputer() {
@@ -135,7 +135,6 @@ public class DashboardServlet {
 		this.page.setNumeroPage(1);
 		return this.updateSearch(RESEARCH_EMPTY);	
 		}
-
 
 	@GetMapping(value = "/Dashboard", params = "lang")
 	public ModelAndView updateLang(@RequestParam("lang") String lang) throws ServletException, IOException {

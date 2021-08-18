@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import configuration.RootConfiguration;
+import controller.CompanyController;
 import controller.ComputerController;
 import logger.CDBLogger;
 import model.Company;
@@ -36,9 +37,8 @@ public class CLImain {
 		List<Company> listCompany1 =  companyController.getAllCompany();
 		listCompany1.stream().forEach(c -> System.out.println(c));
 		*/
+				
 		
-		
-		/*
 		//AFFICHER TOUS LES ORDIS EN CLI
 		context = new AnnotationConfigApplicationContext(RootConfiguration.class);
 		List<Computer> listComputer = context.getBean(ComputerController.class).getAllComputer();
@@ -52,9 +52,8 @@ public class CLImain {
 		//AFFICHER UNE COMPANY
 		Company company =  context.getBean(CompanyController.class).getCompanyById(18);
 		CDBLogger.logInfo(CLImain.class.toString(), company.toString()) ;
-		*/
 		
-
+		
 		
 		/*
 		String name = "blorpf";
